@@ -10,6 +10,8 @@ function createProfile(overrides: Partial<CloudProviderProfile> = {}): CloudProv
     reservedIPs: 5,
     reservedReasons: ['Network', 'Router', 'DNS', 'Future', 'Broadcast'],
     subnetLimit: 200,
+    minSubnetPrefix: 28,
+    maxVpcPrefix: 16,
     defaultTags: [],
     accentColor: '#FF9900',
     iconPath: '/icons/aws.svg',

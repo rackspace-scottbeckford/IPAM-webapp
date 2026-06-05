@@ -15,6 +15,7 @@ export function CIDRInput() {
   const [error, setError] = useState<string | null>(null);
   const [adjustment, setAdjustment] = useState<{ entered: string; corrected: string } | null>(null);
   const [subnetInfo, setSubnetInfo] = useState<SubnetInfo | null>(null);
+  const [vpcWarning, setVpcWarning] = useState<string | null>(null);
 
   const setRootCIDR = useAppStore((state) => state.setRootCIDR);
   const providerProfile = useAppStore((state) => state.providerProfile);
@@ -27,6 +28,7 @@ export function CIDRInput() {
     setError(null);
     setAdjustment(null);
     setSubnetInfo(null);
+    setVpcWarning(null);
 
     const result: ValidationResult = setRootCIDR(trimmed);
 
@@ -53,6 +55,13 @@ export function CIDRInput() {
     const reservedCount = providerProfile?.reservedIPs ?? 2;
     const info = computeSubnetInfo(adjusted, reservedCount);
     setSubnetInfo(info);
+
+    // Check VPC size warning
+    if (providerProfile && enteredPrefix < providerProfile.maxVpcPrefix) {
+      setVpcWarning(`Note: ${providerProfile.displayName} VPCs support a maximum of /${providerProfile.maxVpcPrefix}. This address space is larger than a single VPC.`);
+    } else {
+      setVpcWarning(null);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -101,6 +110,13 @@ export function CIDRInput() {
           <span>
             Adjusted to network address: {adjustment.corrected} (entered: {adjustment.entered})
           </span>
+        </div>
+      )}
+
+      {vpcWarning && (
+        <div className={styles.notification} role="status">
+          <span className={styles.notificationIcon} aria-hidden="true">⚠️</span>
+          <span>{vpcWarning}</span>
         </div>
       )}
 

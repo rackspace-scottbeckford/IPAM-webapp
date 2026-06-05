@@ -48,6 +48,8 @@ const profileArb: fc.Arbitrary<CloudProviderProfile> = fc.record({
   reservedIPs,
   reservedReasons: Array.from({ length: reservedIPs }, (_, i) => `Reserved ${i + 1}`),
   subnetLimit,
+  minSubnetPrefix: 28,
+  maxVpcPrefix: 16,
   defaultTags: [],
   accentColor: '#FF9900',
   iconPath: '/icons/aws.svg',
@@ -370,6 +372,8 @@ describe('Property 22: Summary provider limit warning', () => {
           reservedIPs: 5,
           reservedReasons: [],
           subnetLimit: leaves.length, // exactly at limit
+          minSubnetPrefix: 28,
+          maxVpcPrefix: 16,
           defaultTags: [],
           accentColor: '#FF9900',
           iconPath: '/icons/aws.svg',

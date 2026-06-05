@@ -89,6 +89,10 @@ export interface CloudProviderProfile {
   readonly reservedReasons: readonly string[];
   /** Maximum subnets per VPC/VNet */
   readonly subnetLimit: number;
+  /** Minimum subnet prefix (max split depth) — e.g., 28 means can't split smaller than /28 */
+  readonly minSubnetPrefix: number;
+  /** Maximum VPC/VNet prefix — larger blocks show a warning (e.g., 16 for AWS) */
+  readonly maxVpcPrefix: number;
   /** Default use-case tags for this provider */
   readonly defaultTags: readonly UseCaseTag[];
   /** Cloud-specific accent color (hex) */

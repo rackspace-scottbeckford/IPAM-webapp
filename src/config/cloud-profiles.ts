@@ -6,6 +6,8 @@ export const AWS_PROFILE: CloudProviderProfile = {
   reservedIPs: 5,
   reservedReasons: ['Network address', 'VPC router', 'DNS server', 'Future use', 'Broadcast'],
   subnetLimit: 200,
+  minSubnetPrefix: 28,
+  maxVpcPrefix: 16,
   defaultTags: [
     { id: 'aws-tgw', name: 'transit-gateway', isCustom: false, color: '#FF9900' },
     { id: 'aws-insp', name: 'inspection', isCustom: false, color: '#D13212' },
@@ -24,6 +26,8 @@ export const AZURE_PROFILE: CloudProviderProfile = {
   reservedIPs: 5,
   reservedReasons: ['Network address', 'Default gateway', 'Azure DNS (primary)', 'Azure DNS (secondary)', 'Broadcast'],
   subnetLimit: 3000,
+  minSubnetPrefix: 29,
+  maxVpcPrefix: 8,
   defaultTags: [
     { id: 'az-hub', name: 'hub-vnet', isCustom: false, color: '#0078D4' },
     { id: 'az-spoke', name: 'spoke-vnet', isCustom: false, color: '#50E6FF' },
@@ -42,6 +46,8 @@ export const GCP_PROFILE: CloudProviderProfile = {
   reservedIPs: 4,
   reservedReasons: ['Network address', 'Default gateway', 'Reserved (second-to-last)', 'Broadcast'],
   subnetLimit: 300,
+  minSubnetPrefix: 29,
+  maxVpcPrefix: 8,
   defaultTags: [
     { id: 'gcp-host', name: 'shared-vpc-host', isCustom: false, color: '#4285F4' },
     { id: 'gcp-svc', name: 'shared-vpc-service', isCustom: false, color: '#34A853' },
@@ -59,6 +65,8 @@ export const PRIVATE_PROFILE: CloudProviderProfile = {
   reservedIPs: 2,
   reservedReasons: ['Network address', 'Broadcast'],
   subnetLimit: Infinity,
+  minSubnetPrefix: 30,
+  maxVpcPrefix: 8,
   defaultTags: [
     { id: 'priv-core', name: 'core-network', isCustom: false, color: '#6B7280' },
     { id: 'priv-dmz', name: 'dmz', isCustom: false, color: '#EF4444' },

@@ -161,7 +161,9 @@ function TreeNodeRow({
   const expandedNodes = useAppStore((state) => state.expandedNodes);
 
   const isLeaf = node.children === null;
-  const canSplitNode = canSplit(node);
+  const providerProfile = useAppStore((state) => state.providerProfile);
+  const minPrefix = providerProfile?.minSubnetPrefix ?? 30;
+  const canSplitNode = canSplit(node) && node.cidr.prefixLength < minPrefix;
   const canJoinNode = canJoin(node);
 
   // Default to expanded: a node is collapsed only if explicitly marked as collapsed
@@ -246,7 +248,7 @@ function TreeNodeRow({
                   ? `Split subnet ${cidrLabel}`
                   : `Cannot split ${cidrLabel}: maximum split depth reached`
               }
-              title={canSplitNode ? 'Split subnet' : 'Maximum split depth reached (/30)'}
+              title={canSplitNode ? 'Split subnet' : `Minimum subnet size reached (/${minPrefix})`}
               type="button"
               tabIndex={-1}
             >
