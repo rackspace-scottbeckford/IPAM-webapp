@@ -151,12 +151,11 @@ function validateTreeStructure(node: SubnetNode): boolean {
   const expectedSecondNetwork = (node.cidr.networkAddress.bits + Math.pow(2, 32 - expectedPrefix)) >>> 0;
   if (right.cidr.networkAddress.bits !== expectedSecondNetwork) return false;
 
-  // Leaf nodes should not have children-only metadata issues
   // Tags should only be on leaf nodes
   if (node.tags.length > 0) return false;
   if (node.workloadAccount !== null) return false;
   if (node.availabilityZone !== null) return false;
-  if (node.label !== null) return false;
+  // Labels are allowed on non-leaf nodes (preserved after split for context)
 
   // Recursively validate children
   return validateTreeStructure(left) && validateTreeStructure(right);
