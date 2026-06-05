@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <!-- Google Cloud logo - colored cloud shape -->
+  <!-- Outer colored ring/cloud -->
+  <path d="M30 8 C18 8, 8 18, 10 28 C6 30, 4 36, 8 42 C10 48, 16 52, 22 52 L38 52 C44 52, 50 48, 52 42 C56 36, 54 30, 50 28 C52 18, 42 8, 30 8 Z" fill="#4285F4"/>
+  <!-- Red top section -->
+  <path d="M30 8 C22 8, 15 12, 12 18 L22 24 C24 20, 27 18, 30 18 C33 18, 36 20, 38 24 L48 18 C45 12, 38 8, 30 8 Z" fill="#EA4335"/>
+  <!-- Yellow left section -->
+  <path d="M12 18 C9 23, 8 28, 10 33 L20 30 C19 28, 19 25, 20 23 Z" fill="#FBBC04"/>
+  <!-- Green bottom-left -->
+  <path d="M10 33 C11 38, 14 43, 20 46 L25 36 C22 35, 20 33, 20 30 Z" fill="#34A853"/>
+  <!-- White cloud center -->
+  <path d="M22 24 C20 28, 20 33, 22 37 C24 41, 28 44, 32 44 L38 44 C42 44, 45 41, 46 37 C48 33, 47 28, 44 25 C42 22, 38 20, 34 20 L28 20 C25 20, 23 21, 22 24 Z" fill="white"/>
+</svg>

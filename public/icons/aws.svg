@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60" fill="none">
+  <!-- AWS text in dark slate -->
+  <text x="10" y="38" font-family="'Amazon Ember', Arial, sans-serif" font-size="36" font-weight="700" fill="#232F3E">aws</text>
+  <!-- Orange smile/arrow -->
+  <path d="M15 48 C30 55, 60 58, 85 48" stroke="#FF9900" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M78 44 L86 48 L80 52" stroke="#FF9900" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

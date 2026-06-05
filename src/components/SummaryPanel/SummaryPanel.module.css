@@ -1,0 +1,199 @@
+.panel {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent-color, #e5e7eb);
+}
+
+.cloudIcon {
+  height: 24px;
+  width: auto;
+  max-width: 48px;
+  object-fit: contain;
+}
+
+.panelTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.section {
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin: 0 0 0.5rem;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.statValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.tagList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tagItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background-color: #f9fafb;
+}
+
+.tagName {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.tagSwatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.tagCount {
+  font-weight: 600;
+  color: #374151;
+}
+
+.azList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.azItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background-color: #f9fafb;
+}
+
+.accountTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.accountTable th {
+  text-align: left;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.accountTable td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.accountTable tr:last-child td {
+  border-bottom: none;
+}
+
+.warningBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  margin-bottom: 1rem;
+}
+
+.warningIcon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.warningText {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.reservedList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.reservedItem {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0;
+  font-size: 0.8125rem;
+  color: #4b5563;
+}
+
+.reservedBullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.emptyState {
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 1rem;
+}

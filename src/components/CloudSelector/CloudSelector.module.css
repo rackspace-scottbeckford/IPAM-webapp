@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+}
+
+.subheading {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  max-width: 900px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  border-color: var(--card-accent, #EB0000);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--card-accent, #EB0000);
+  outline-offset: 2px;
+}
+
+.cardSelected {
+  border-color: var(--card-accent, #EB0000);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.cardIcon {
+  height: 48px;
+  width: 48px;
+}
+
+.cardName {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+/* Confirmation dialog overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.dialogTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
+}
+
+.dialogMessage {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+}
+
+.tagList {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.tagList li {
+  margin-bottom: 0.25rem;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btnCancel {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btnCancel:hover {
+  background: #f3f4f6;
+}
+
+.btnConfirm {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #dc2626;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btnConfirm:hover {
+  background: #b91c1c;
+}

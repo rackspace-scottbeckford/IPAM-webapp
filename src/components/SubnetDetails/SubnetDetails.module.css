@@ -1,0 +1,214 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background-color: #fafafa;
+  font-size: 0.875rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #111827;
+}
+
+.cidrLabel {
+  font-family: monospace;
+  font-size: 0.8125rem;
+  color: #4b5563;
+}
+
+/* === Non-leaf message === */
+
+.nonLeafMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 4px;
+  color: #92400e;
+  font-size: 0.8125rem;
+}
+
+.nonLeafIcon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+/* === Section === */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.sectionLabel {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.8125rem;
+}
+
+/* === Tags === */
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.tagRemoveButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.625rem;
+  line-height: 1;
+  transition: background-color 0.15s;
+}
+
+.tagRemoveButton:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tagRemoveButton:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+
+/* === Tag Picker === */
+
+.tagPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.tagPickerButton {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #374151;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.tagPickerButton:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.tagPickerButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tagPickerButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+.maxTagsMessage {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* === Text Inputs === */
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.textInput {
+  flex: 1;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: #111827;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.clearButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.75rem;
+  transition: background-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.clearButton:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.clearButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+/* === Empty state === */
+
+.emptyState {
+  color: #6b7280;
+  font-size: 0.875rem;
+  padding: 2rem;
+  text-align: center;
+}

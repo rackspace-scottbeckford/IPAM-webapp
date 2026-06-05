@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <!-- Azure "A" mark - two-tone blue -->
+  <path d="M30 5 L5 55 L25 55 L30 45 L20 45 L35 15 Z" fill="#0062AD"/>
+  <path d="M30 5 L55 55 L35 55 L30 45 L40 45 L25 15 Z" fill="#0089D6"/>
+  <!-- Inner triangle cutout effect -->
+  <path d="M25 42 L30 30 L35 42 Z" fill="white"/>
+</svg>
