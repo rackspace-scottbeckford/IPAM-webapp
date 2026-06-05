@@ -5,6 +5,36 @@ import type { ValidationResult, SubnetInfo } from '../../core/types';
 import styles from './CIDRInput.module.css';
 
 /**
+ * Check if a network address falls within RFC 1918 private address ranges:
+ * - 10.0.0.0/8     (10.0.0.0 – 10.255.255.255)
+ * - 172.16.0.0/12  (172.16.0.0 – 172.31.255.255)
+ * - 192.168.0.0/16 (192.168.0.0 – 192.168.255.255)
+ */
+function isRfc1918(networkBits: number, prefix: number): boolean {
+  const totalAddresses = Math.pow(2, 32 - prefix);
+  const endAddress = (networkBits + totalAddresses - 1) >>> 0;
+
+  // 10.0.0.0/8
+  const rfc10Start = 0x0A000000; // 10.0.0.0
+  const rfc10End = 0x0AFFFFFF;   // 10.255.255.255
+
+  // 172.16.0.0/12
+  const rfc172Start = 0xAC100000; // 172.16.0.0
+  const rfc172End = 0xAC1FFFFF;   // 172.31.255.255
+
+  // 192.168.0.0/16
+  const rfc192Start = 0xC0A80000; // 192.168.0.0
+  const rfc192End = 0xC0A8FFFF;   // 192.168.255.255
+
+  // Check if the entire range fits within one of the RFC 1918 blocks
+  if (networkBits >= rfc10Start && endAddress <= rfc10End) return true;
+  if (networkBits >= rfc172Start && endAddress <= rfc172End) return true;
+  if (networkBits >= rfc192Start && endAddress <= rfc192End) return true;
+
+  return false;
+}
+
+/**
  * CIDRInput component for entering a network address in CIDR notation.
  *
  * Validates input, auto-adjusts host bits, and displays computed subnet info.
@@ -16,6 +46,7 @@ export function CIDRInput() {
   const [adjustment, setAdjustment] = useState<{ entered: string; corrected: string } | null>(null);
   const [subnetInfo, setSubnetInfo] = useState<SubnetInfo | null>(null);
   const [vpcWarning, setVpcWarning] = useState<string | null>(null);
+  const [rfc1918Warning, setRfc1918Warning] = useState<string | null>(null);
 
   const setRootCIDR = useAppStore((state) => state.setRootCIDR);
   const providerProfile = useAppStore((state) => state.providerProfile);
@@ -29,6 +60,7 @@ export function CIDRInput() {
     setAdjustment(null);
     setSubnetInfo(null);
     setVpcWarning(null);
+    setRfc1918Warning(null);
 
     const result: ValidationResult = setRootCIDR(trimmed);
 
@@ -61,6 +93,14 @@ export function CIDRInput() {
       setVpcWarning(`Note: ${providerProfile.displayName} VPCs support a maximum of /${providerProfile.maxVpcPrefix}. This address space is larger than a single VPC.`);
     } else {
       setVpcWarning(null);
+    }
+
+    // Check RFC 1918 private address space warning
+    const networkBits = adjusted.networkAddress.bits;
+    if (!isRfc1918(networkBits, enteredPrefix)) {
+      setRfc1918Warning('Warning: This address is outside RFC 1918 private space (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16). Cloud VPCs typically use private addresses.');
+    } else {
+      setRfc1918Warning(null);
     }
   };
 
@@ -117,6 +157,13 @@ export function CIDRInput() {
         <div className={styles.notification} role="status">
           <span className={styles.notificationIcon} aria-hidden="true">⚠️</span>
           <span>{vpcWarning}</span>
+        </div>
+      )}
+
+      {rfc1918Warning && (
+        <div className={styles.error} role="alert">
+          <span className={styles.errorIcon} aria-hidden="true">⚠</span>
+          <span>{rfc1918Warning}</span>
         </div>
       )}
 
