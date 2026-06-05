@@ -36,7 +36,7 @@ export function SummaryPanel() {
       {/* Panel Header with cloud provider icon */}
       <div className={styles.panelHeader}>
         <img
-          src={providerProfile.iconPath}
+          src={`${import.meta.env.BASE_URL}${providerProfile.iconPath}`}
           alt={providerProfile.displayName}
           className={styles.cloudIcon}
           onError={(e) => {

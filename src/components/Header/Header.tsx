@@ -158,7 +158,7 @@ function CloudChangeDialog({ currentCloud, onSwapKeepPlan, onSwapStartOver, onCa
 function RackspaceLogo() {
   return (
     <img
-      src="/icons/Rackspace_Technology_Logo_RGB_WHT.png"
+      src={`${import.meta.env.BASE_URL}icons/Rackspace_Technology_Logo_RGB_WHT.png`}
       alt="Rackspace Technology"
       className={styles.rackspaceLogo}
     />
@@ -166,11 +166,12 @@ function RackspaceLogo() {
 }
 
 function CloudProviderLogo({ cloud }: { cloud: string }) {
+  const base = import.meta.env.BASE_URL;
   const iconMap: Record<string, string> = {
-    aws: '/icons/aws logo.png',
-    azure: '/icons/azure logo.jpeg',
-    gcp: '/icons/GCP logo.png',
-    private: '/icons/private-cloud.svg',
+    aws: `${base}icons/aws logo.png`,
+    azure: `${base}icons/azure logo.jpeg`,
+    gcp: `${base}icons/GCP logo.png`,
+    private: `${base}icons/private-cloud.svg`,
   };
 
   const src = iconMap[cloud] ?? iconMap.private;

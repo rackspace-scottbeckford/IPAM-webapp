@@ -15,7 +15,7 @@ export const AWS_PROFILE: CloudProviderProfile = {
     { id: 'aws-eg', name: 'egress', isCustom: false, color: '#E07941' },
   ],
   accentColor: '#FF9900',
-  iconPath: '/icons/aws logo.png',
+  iconPath: 'icons/aws logo.png',
 };
 
 export const AZURE_PROFILE: CloudProviderProfile = {
@@ -33,7 +33,7 @@ export const AZURE_PROFILE: CloudProviderProfile = {
     { id: 'az-ss', name: 'shared-services', isCustom: false, color: '#FFB900' },
   ],
   accentColor: '#0078D4',
-  iconPath: '/icons/azure logo.jpeg',
+  iconPath: 'icons/azure logo.jpeg',
 };
 
 export const GCP_PROFILE: CloudProviderProfile = {
@@ -50,7 +50,7 @@ export const GCP_PROFILE: CloudProviderProfile = {
     { id: 'gcp-ss', name: 'shared-services', isCustom: false, color: '#A142F4' },
   ],
   accentColor: '#4285F4',
-  iconPath: '/icons/GCP logo.png',
+  iconPath: 'icons/GCP logo.png',
 };
 
 export const PRIVATE_PROFILE: CloudProviderProfile = {
@@ -66,7 +66,7 @@ export const PRIVATE_PROFILE: CloudProviderProfile = {
     { id: 'priv-mgmt', name: 'management', isCustom: false, color: '#10B981' },
   ],
   accentColor: '#6B7280',
-  iconPath: '/icons/private-cloud.svg',
+  iconPath: 'icons/private-cloud.svg',
 };
 
 /**
