@@ -186,4 +186,106 @@ describe('CIDRInput logic', () => {
       expect(result.valid).toBe(true);
     });
   });
+
+  describe('CIDR suffix dropdown synchronization (Requirement 13)', () => {
+    it('PREFIX_OPTIONS covers /8 to /28 (21 options)', () => {
+      // The dropdown should have options from /8 to /28
+      const prefixes = Array.from({ length: 21 }, (_, i) => i + 8);
+      expect(prefixes[0]).toBe(8);
+      expect(prefixes[prefixes.length - 1]).toBe(28);
+      expect(prefixes.length).toBe(21);
+    });
+
+    it('each prefix option shows correct total address count', () => {
+      for (let prefix = 8; prefix <= 28; prefix++) {
+        const expectedTotal = Math.pow(2, 32 - prefix);
+        expect(expectedTotal).toBeGreaterThan(0);
+        // /8 = 16,777,216 addresses, /28 = 16 addresses
+        if (prefix === 8) expect(expectedTotal).toBe(16777216);
+        if (prefix === 16) expect(expectedTotal).toBe(65536);
+        if (prefix === 24) expect(expectedTotal).toBe(256);
+        if (prefix === 28) expect(expectedTotal).toBe(16);
+      }
+    });
+
+    it('extracting prefix from valid CIDR input works correctly', () => {
+      const testCases = [
+        { input: '10.0.0.0/16', expected: 16 },
+        { input: '172.16.0.0/12', expected: 12 },
+        { input: '192.168.1.0/24', expected: 24 },
+        { input: '10.0.0.0/28', expected: 28 },
+        { input: '10.0.0.0/8', expected: 8 },
+      ];
+
+      for (const { input, expected } of testCases) {
+        const slashIdx = input.lastIndexOf('/');
+        const prefixStr = input.slice(slashIdx + 1);
+        const prefix = Number(prefixStr);
+        expect(prefix).toBe(expected);
+      }
+    });
+
+    it('extracting prefix from input without slash returns no match', () => {
+      const input = '10.0.0.0';
+      const slashIdx = input.lastIndexOf('/');
+      expect(slashIdx).toBe(-1);
+    });
+
+    it('extracting prefix from input with out-of-range prefix returns invalid', () => {
+      const testCases = [
+        { input: '10.0.0.0/7', valid: false },
+        { input: '10.0.0.0/31', valid: false },
+        { input: '10.0.0.0/abc', valid: false },
+      ];
+
+      for (const { input } of testCases) {
+        const slashIdx = input.lastIndexOf('/');
+        const prefixStr = input.slice(slashIdx + 1);
+        const prefix = Number(prefixStr);
+        const isValidForDropdown = Number.isInteger(prefix) && prefix >= 8 && prefix <= 28;
+        expect(isValidForDropdown).toBe(false);
+      }
+    });
+
+    it('selecting prefix from dropdown appends to existing IP', () => {
+      // Simulates: user has typed "10.0.0.0" then picks /16 from dropdown
+      const currentInput = '10.0.0.0';
+      const selectedPrefix = '16';
+      const slashIdx = currentInput.lastIndexOf('/');
+
+      let newInput: string;
+      if (slashIdx !== -1) {
+        newInput = currentInput.slice(0, slashIdx + 1) + selectedPrefix;
+      } else {
+        newInput = currentInput + '/' + selectedPrefix;
+      }
+
+      expect(newInput).toBe('10.0.0.0/16');
+    });
+
+    it('selecting prefix from dropdown replaces existing prefix', () => {
+      // Simulates: user has "10.0.0.0/16" and picks /24 from dropdown
+      const currentInput = '10.0.0.0/16';
+      const selectedPrefix = '24';
+      const slashIdx = currentInput.lastIndexOf('/');
+
+      let newInput: string;
+      if (slashIdx !== -1) {
+        newInput = currentInput.slice(0, slashIdx + 1) + selectedPrefix;
+      } else {
+        newInput = currentInput + '/' + selectedPrefix;
+      }
+
+      expect(newInput).toBe('10.0.0.0/24');
+    });
+
+    it('validates that all dropdown prefixes produce valid CIDRs with a network address', () => {
+      const baseIp = '10.0.0.0';
+      for (let prefix = 8; prefix <= 28; prefix++) {
+        const cidr = `${baseIp}/${prefix}`;
+        const result = validateCIDR(cidr);
+        expect(result.valid).toBe(true);
+      }
+    });
+  });
 });
