@@ -1,4 +1,5 @@
 import { useAppStore } from './store/app-store';
+import { useI18n } from './i18n';
 import { useCloudTheme } from './theme/useCloudTheme';
 import { useURLSync } from './hooks/useURLSync';
 import { Header } from './components/Header/Header';
@@ -71,6 +72,7 @@ function App() {
  */
 function ViewToggle({ activeView }: { activeView: 'tree' | 'grouped' }) {
   const store = useAppStore;
+  const t = useI18n((s) => s.t);
 
   return (
     <div className={styles.viewToggle} role="tablist" aria-label="View mode">
@@ -80,7 +82,7 @@ function ViewToggle({ activeView }: { activeView: 'tree' | 'grouped' }) {
         aria-selected={activeView === 'tree'}
         onClick={() => store.setState({ activeView: 'tree' })}
       >
-        Tree
+        {t.treeView}
       </button>
       <button
         className={`${styles.viewToggleButton} ${activeView === 'grouped' ? styles.viewToggleActive : ''}`}
@@ -88,7 +90,7 @@ function ViewToggle({ activeView }: { activeView: 'tree' | 'grouped' }) {
         aria-selected={activeView === 'grouped'}
         onClick={() => store.setState({ activeView: 'grouped' })}
       >
-        Grouped
+        {t.groupedView}
       </button>
     </div>
   );

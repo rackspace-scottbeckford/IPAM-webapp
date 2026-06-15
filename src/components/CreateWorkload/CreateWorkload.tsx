@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAppStore } from '../../store/app-store';
+import { useI18n } from '../../i18n';
 import {
   calculateReverseCIDR,
   validateFitsInRoot,
@@ -38,6 +39,7 @@ export function CreateWorkload() {
   const splitSubnet = useAppStore((state) => state.splitSubnet);
   const setWorkloadAccount = useAppStore((state) => state.setWorkloadAccount);
   const setLabel = useAppStore((state) => state.setLabel);
+  const t = useI18n((s) => s.t);
 
   const canCreate = networkPlan !== null && providerProfile !== null;
 
@@ -163,26 +165,25 @@ export function CreateWorkload() {
         className={styles.createButton}
         onClick={handleOpen}
         disabled={!canCreate}
-        aria-label="Create workload with capacity planning"
-        title={!canCreate ? 'Select a cloud and enter a CIDR block first' : 'Create a workload by specifying required IPs'}
+        aria-label={t.createWorkload}
+        title={!canCreate ? t.selectCloudFirst : t.createWorkload}
       >
-        + Create Workload
+        {t.createWorkload}
       </button>
 
       {dialogState.step !== 'closed' && (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Create Workload">
+        <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={t.createWorkloadTitle}>
           <div className={styles.dialog}>
             {dialogState.step === 'input' && (
               <>
-                <h2 className={styles.title}>Create Workload</h2>
+                <h2 className={styles.title}>{t.createWorkloadTitle}</h2>
                 <p className={styles.description}>
-                  Enter a workload name and how many usable IP addresses you need.
-                  The tool will suggest the smallest suitable subnet.
+                  {t.createWorkloadDescription}
                 </p>
 
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="workload-name">
-                    Workload Name
+                    {t.workloadName}
                   </label>
                   <input
                     id="workload-name"
@@ -198,7 +199,7 @@ export function CreateWorkload() {
 
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="required-ips">
-                    Required Usable IPs
+                    {t.requiredUsableIPs}
                   </label>
                   <input
                     id="required-ips"
@@ -212,17 +213,17 @@ export function CreateWorkload() {
                   />
                   {providerProfile && (
                     <span className={styles.hint}>
-                      {providerProfile.displayName} reserves {providerProfile.reservedIPs} IPs per subnet
+                      {providerProfile.displayName} {t.reservedPerSubnet.replace('{count}', String(providerProfile.reservedIPs))}
                     </span>
                   )}
                 </div>
 
                 <div className={styles.actions}>
                   <button type="button" className={styles.cancelButton} onClick={handleClose}>
-                    Cancel
+                    {t.cancel}
                   </button>
                   <button type="button" className={styles.primaryButton} onClick={handleCalculate}>
-                    Calculate
+                    {t.calculate}
                   </button>
                 </div>
               </>
@@ -230,43 +231,43 @@ export function CreateWorkload() {
 
             {dialogState.step === 'confirm' && (
               <>
-                <h2 className={styles.title}>Suggested Allocation</h2>
+                <h2 className={styles.title}>{t.suggestedAllocation}</h2>
 
                 <div className={styles.suggestion}>
                   <div className={styles.suggestionRow}>
-                    <span className={styles.suggestionLabel}>Workload:</span>
+                    <span className={styles.suggestionLabel}>{t.workloadName}:</span>
                     <span className={styles.suggestionValue}>{dialogState.name}</span>
                   </div>
                   <div className={styles.suggestionRow}>
-                    <span className={styles.suggestionLabel}>Suggested Prefix:</span>
+                    <span className={styles.suggestionLabel}>{t.suggestedPrefix}:</span>
                     <span className={styles.suggestionValue}>/{dialogState.result.suggestedPrefix}</span>
                   </div>
                   <div className={styles.suggestionRow}>
-                    <span className={styles.suggestionLabel}>Total Addresses:</span>
+                    <span className={styles.suggestionLabel}>{t.totalAddresses}:</span>
                     <span className={styles.suggestionValue}>
                       {dialogState.result.totalAddresses.toLocaleString()}
                     </span>
                   </div>
                   <div className={styles.suggestionRow}>
-                    <span className={styles.suggestionLabel}>Usable Addresses:</span>
+                    <span className={styles.suggestionLabel}>{t.usableAddresses}:</span>
                     <span className={styles.suggestionValue}>
                       {dialogState.result.usableAddresses.toLocaleString()}
                     </span>
                   </div>
                   <div className={styles.suggestionRow}>
-                    <span className={styles.suggestionLabel}>Surplus:</span>
+                    <span className={styles.suggestionLabel}>{t.surplus}:</span>
                     <span className={styles.suggestionValue}>
-                      +{dialogState.result.surplus.toLocaleString()} extra usable IPs
+                      +{dialogState.result.surplus.toLocaleString()} {t.extraUsableIPs}
                     </span>
                   </div>
                 </div>
 
                 <div className={styles.actions}>
                   <button type="button" className={styles.cancelButton} onClick={handleClose}>
-                    Cancel
+                    {t.cancel}
                   </button>
                   <button type="button" className={styles.primaryButton} onClick={handleConfirm}>
-                    Allocate Subnet
+                    {t.allocateSubnet}
                   </button>
                 </div>
               </>
@@ -274,18 +275,18 @@ export function CreateWorkload() {
 
             {dialogState.step === 'error' && (
               <>
-                <h2 className={styles.title}>Cannot Create Workload</h2>
+                <h2 className={styles.title}>{t.cannotCreateWorkload}</h2>
                 <p className={styles.errorMessage}>{dialogState.message}</p>
                 <div className={styles.actions}>
                   <button type="button" className={styles.cancelButton} onClick={handleClose}>
-                    Close
+                    {t.close}
                   </button>
                   <button
                     type="button"
                     className={styles.primaryButton}
                     onClick={() => setDialogState({ step: 'input' })}
                   >
-                    Try Again
+                    {t.tryAgain}
                   </button>
                 </div>
               </>
@@ -293,13 +294,13 @@ export function CreateWorkload() {
 
             {dialogState.step === 'success' && (
               <>
-                <h2 className={styles.title}>Workload Created</h2>
+                <h2 className={styles.title}>{t.workloadCreated}</h2>
                 <p className={styles.successMessage}>
-                  Allocated a /{dialogState.prefix} subnet for "{dialogState.name}".
+                  {t.allocatedSubnetFor.replace('{prefix}', String(dialogState.prefix)).replace('{name}', dialogState.name)}
                 </p>
                 <div className={styles.actions}>
                   <button type="button" className={styles.primaryButton} onClick={handleClose}>
-                    Done
+                    {t.done}
                   </button>
                 </div>
               </>

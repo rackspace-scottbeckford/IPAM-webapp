@@ -102,17 +102,18 @@ interface CloudChangeDialogProps {
 
 function CloudChangeDialog({ currentCloud, onSwapKeepPlan, onSwapStartOver, onCancel }: CloudChangeDialogProps) {
   const [selectedCloud, setSelectedCloud] = useState<TargetCloud | null>(null);
+  const t = useI18n((s) => s.t);
 
   const otherClouds = CLOUD_OPTIONS.filter((c) => c.id !== currentCloud);
 
   return (
     <div className={styles.dialogOverlay} onClick={onCancel}>
       <div className={styles.dialog} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="change-cloud-title">
-        <h3 id="change-cloud-title" className={styles.dialogTitle}>Change Cloud Provider</h3>
+        <h3 id="change-cloud-title" className={styles.dialogTitle}>{t.changeCloudTitle}</h3>
 
         {!selectedCloud ? (
           <>
-            <p className={styles.dialogMessage}>Select a new cloud provider:</p>
+            <p className={styles.dialogMessage}>{t.selectNewCloud}</p>
             <div className={styles.cloudOptions}>
               {otherClouds.map((cloud) => (
                 <button
@@ -127,29 +128,29 @@ function CloudChangeDialog({ currentCloud, onSwapKeepPlan, onSwapStartOver, onCa
               ))}
             </div>
             <div className={styles.dialogActions}>
-              <button className={styles.btnCancel} onClick={onCancel} type="button">Cancel</button>
+              <button className={styles.btnCancel} onClick={onCancel} type="button">{t.cancel}</button>
             </div>
           </>
         ) : (
           <>
             <p className={styles.dialogMessage}>
-              Switch to <strong>{CLOUD_OPTIONS.find((c) => c.id === selectedCloud)?.label}</strong>. What would you like to do with your current plan?
+              {t.switchToCloud} <strong>{CLOUD_OPTIONS.find((c) => c.id === selectedCloud)?.label}</strong>.
             </p>
             <div className={styles.dialogActions}>
-              <button className={styles.btnCancel} onClick={onCancel} type="button">Cancel</button>
+              <button className={styles.btnCancel} onClick={onCancel} type="button">{t.cancel}</button>
               <button
                 className={styles.btnKeep}
                 onClick={() => onSwapKeepPlan(selectedCloud)}
                 type="button"
               >
-                Keep address space
+                {t.keepAddressSpace}
               </button>
               <button
                 className={styles.btnStartOver}
                 onClick={() => onSwapStartOver(selectedCloud)}
                 type="button"
               >
-                Start over
+                {t.startOver}
               </button>
             </div>
           </>

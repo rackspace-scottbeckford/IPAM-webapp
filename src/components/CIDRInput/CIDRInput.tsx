@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store/app-store';
+import { useI18n } from '../../i18n';
 import { adjustToNetworkAddress, numberToIp, ipToNumber, computeSubnetInfo } from '../../core/subnet-calculator';
 import type { ValidationResult, SubnetInfo } from '../../core/types';
 import styles from './CIDRInput.module.css';
@@ -60,6 +61,7 @@ export function CIDRInput() {
 
   const setRootCIDR = useAppStore((state) => state.setRootCIDR);
   const providerProfile = useAppStore((state) => state.providerProfile);
+  const t = useI18n((s) => s.t);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -178,8 +180,8 @@ export function CIDRInput() {
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           maxLength={18}
-          placeholder="e.g., 10.0.0.0/16"
-          aria-label="Network address in CIDR notation"
+          placeholder={t.cidrPlaceholder}
+          aria-label={t.cidrLabel}
           aria-describedby={hasError ? errorId : undefined}
           aria-invalid={hasError}
         />
@@ -188,11 +190,11 @@ export function CIDRInput() {
             type="button"
             className={styles.prefixTrigger}
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            aria-label="CIDR prefix length selector"
+            aria-label={t.prefixLabel}
             aria-expanded={dropdownOpen}
             aria-haspopup="listbox"
           >
-            {selectedPrefix !== null ? `/${selectedPrefix}` : '/prefix'}
+            {selectedPrefix !== null ? `/${selectedPrefix}` : t.prefixPlaceholder}
             <span className={styles.prefixArrow} aria-hidden="true">▾</span>
           </button>
           {dropdownOpen && (
@@ -206,7 +208,7 @@ export function CIDRInput() {
                   onClick={() => handlePrefixSelect(prefix)}
                 >
                   <span className={styles.prefixOptionMask}>/{prefix}</span>
-                  <span className={styles.prefixOptionDetail}>{totalAddresses.toLocaleString()} addr</span>
+                  <span className={styles.prefixOptionDetail}>{totalAddresses.toLocaleString()} {t.addressesUnit}</span>
                 </li>
               ))}
             </ul>
@@ -217,7 +219,7 @@ export function CIDRInput() {
           className={styles.submitButton}
           onClick={handleSubmit}
         >
-          Calculate
+          {t.calculate}
         </button>
       </div>
 
@@ -253,16 +255,16 @@ export function CIDRInput() {
 
       {subnetInfo && (
         <div className={styles.subnetInfo} aria-label="Computed subnet information">
-          <span className={styles.infoLabel}>Network Address:</span>
+          <span className={styles.infoLabel}>{t.networkAddress}:</span>
           <span className={styles.infoValue}>{subnetInfo.networkAddress}</span>
 
-          <span className={styles.infoLabel}>Broadcast Address:</span>
+          <span className={styles.infoLabel}>{t.broadcastAddress}:</span>
           <span className={styles.infoValue}>{subnetInfo.broadcastAddress}</span>
 
-          <span className={styles.infoLabel}>Subnet Mask:</span>
+          <span className={styles.infoLabel}>{t.subnetMask}:</span>
           <span className={styles.infoValue}>{subnetInfo.subnetMask}</span>
 
-          <span className={styles.infoLabel}>Usable Hosts:</span>
+          <span className={styles.infoLabel}>{t.usableHosts}:</span>
           <span className={styles.infoValue}>{subnetInfo.usableHosts.toLocaleString()}</span>
         </div>
       )}
