@@ -43,6 +43,23 @@ function isRfc1918(networkBits: number, prefix: number): boolean {
 }
 
 /**
+ * Check if a network range overlaps with the Docker default bridge network (172.17.0.0/16).
+ * AWS recommends avoiding this range to prevent routing conflicts with containerized workloads.
+ * See: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html
+ */
+function overlapsDockerBridge(networkBits: number, prefix: number): boolean {
+  const totalAddresses = Math.pow(2, 32 - prefix);
+  const endAddress = (networkBits + totalAddresses - 1) >>> 0;
+
+  // 172.17.0.0/16
+  const dockerStart = 0xAC110000; // 172.17.0.0
+  const dockerEnd = 0xAC11FFFF;   // 172.17.255.255
+
+  // Check if the ranges overlap
+  return networkBits <= dockerEnd && endAddress >= dockerStart;
+}
+
+/**
  * CIDRInput component for entering a network address in CIDR notation.
  *
  * Includes a bidirectionally-synchronized dropdown for prefix length selection.
@@ -56,6 +73,7 @@ export function CIDRInput() {
   const [subnetInfo, setSubnetInfo] = useState<SubnetInfo | null>(null);
   const [vpcWarning, setVpcWarning] = useState<string | null>(null);
   const [rfc1918Warning, setRfc1918Warning] = useState<string | null>(null);
+  const [dockerWarning, setDockerWarning] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -118,6 +136,7 @@ export function CIDRInput() {
     setSubnetInfo(null);
     setVpcWarning(null);
     setRfc1918Warning(null);
+    setDockerWarning(null);
 
     const result: ValidationResult = setRootCIDR(trimmed);
 
@@ -158,6 +177,13 @@ export function CIDRInput() {
       setRfc1918Warning(t.rfc1918Warning);
     } else {
       setRfc1918Warning(null);
+    }
+
+    // Check 172.17.0.0/16 Docker bridge conflict (AWS recommendation)
+    if (providerProfile?.cloudId === 'aws' && overlapsDockerBridge(networkBits, enteredPrefix)) {
+      setDockerWarning(t.dockerConflictWarning);
+    } else {
+      setDockerWarning(null);
     }
   };
 
@@ -250,6 +276,13 @@ export function CIDRInput() {
         <div className={styles.error} role="alert">
           <span className={styles.errorIcon} aria-hidden="true">⚠</span>
           <span>{rfc1918Warning}</span>
+        </div>
+      )}
+
+      {dockerWarning && (
+        <div className={styles.notification} role="alert">
+          <span className={styles.notificationIcon} aria-hidden="true">⚠️</span>
+          <span>{dockerWarning}</span>
         </div>
       )}
 
