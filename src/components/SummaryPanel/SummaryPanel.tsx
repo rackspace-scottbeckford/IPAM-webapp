@@ -1,4 +1,5 @@
 import { useAppStore } from '../../store/app-store';
+import { useI18n } from '../../i18n';
 import styles from './SummaryPanel.module.css';
 
 /**
@@ -16,12 +17,13 @@ import styles from './SummaryPanel.module.css';
 export function SummaryPanel() {
   const summary = useAppStore((s) => s.summary);
   const providerProfile = useAppStore((s) => s.providerProfile);
+  const t = useI18n((s) => s.t);
 
   if (!summary || !providerProfile) {
     return (
-      <aside className={styles.panel} aria-label="VPC Planning Summary">
+      <aside className={styles.panel} aria-label={t.summaryTitle}>
         <p className={styles.emptyState}>
-          Select a cloud provider and enter a CIDR block to see your VPC summary.
+          {t.selectCloudFirst}
         </p>
       </aside>
     );
@@ -30,7 +32,7 @@ export function SummaryPanel() {
   return (
     <aside
       className={styles.panel}
-      aria-label="VPC Planning Summary"
+      aria-label={t.summaryTitle}
       style={{ '--accent-color': providerProfile.accentColor } as React.CSSProperties}
     >
       {/* Panel Header with cloud provider icon */}
@@ -43,7 +45,7 @@ export function SummaryPanel() {
             (e.target as HTMLImageElement).style.display = 'none';
           }}
         />
-        <h2 className={styles.panelTitle}>VPC Planning Summary</h2>
+        <h2 className={styles.panelTitle}>{t.summaryTitle}</h2>
       </div>
 
       {/* Provider limit warning */}
@@ -51,9 +53,10 @@ export function SummaryPanel() {
         <div className={styles.warningBanner} role="alert">
           <span className={styles.warningIcon} aria-hidden="true">⚠️</span>
           <span className={styles.warningText}>
-            Subnet limit exceeded for {summary.limitWarning.providerName}:{' '}
-            <strong>{summary.limitWarning.currentCount}</strong> subnets
-            (max {summary.limitWarning.maxAllowed})
+            {t.limitWarning
+              .replace('{current}', String(summary.limitWarning.currentCount))
+              .replace('{max}', String(summary.limitWarning.maxAllowed))
+              .replace('{provider}', summary.limitWarning.providerName)}
           </span>
         </div>
       )}
@@ -63,19 +66,19 @@ export function SummaryPanel() {
         <h3 className={styles.sectionTitle}>Overview</h3>
         <div className={styles.statGrid}>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>Total Subnets</span>
+            <span className={styles.statLabel}>{t.totalSubnets}</span>
             <span className={styles.statValue}>{summary.totalSubnets}</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>Allocation</span>
+            <span className={styles.statLabel}>{t.allocationPercentage}</span>
             <span className={styles.statValue}>{summary.allocationPercentage.toFixed(1)}%</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>Total Usable IPs</span>
+            <span className={styles.statLabel}>{t.totalUsableIPs}</span>
             <span className={styles.statValue}>{summary.totalUsableIPs.toLocaleString()}</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>Reserved per Subnet</span>
+            <span className={styles.statLabel}>{t.reservedPerSubnet.replace('{count}', String(providerProfile.reservedIPs))}</span>
             <span className={styles.statValue}>{providerProfile.reservedIPs}</span>
           </div>
         </div>
@@ -84,8 +87,8 @@ export function SummaryPanel() {
       {/* Subnets by Tag */}
       {summary.subnetsByTag.size > 0 && (
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Subnets by Tag</h3>
-          <ul className={styles.tagList} aria-label="Subnet count per tag">
+          <h3 className={styles.sectionTitle}>{t.subnetsByTag}</h3>
+          <ul className={styles.tagList} aria-label={t.subnetsByTag}>
             {Array.from(summary.subnetsByTag.entries()).map(([tagName, count]) => {
               const tag = providerProfile.defaultTags.find((t) => t.name === tagName);
               return (
@@ -109,8 +112,8 @@ export function SummaryPanel() {
       {/* Subnets by Availability Zone */}
       {summary.subnetsByAZ.size > 0 && (
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Subnets by Availability Zone</h3>
-          <ul className={styles.azList} aria-label="Subnet count per availability zone">
+          <h3 className={styles.sectionTitle}>{t.subnetsByAZ}</h3>
+          <ul className={styles.azList} aria-label={t.subnetsByAZ}>
             {Array.from(summary.subnetsByAZ.entries()).map(([az, count]) => (
               <li key={az} className={styles.azItem}>
                 <span>{az}</span>
@@ -124,13 +127,13 @@ export function SummaryPanel() {
       {/* Workload Account Breakdown */}
       {summary.accountBreakdown.length > 0 && (
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Workload Accounts</h3>
-          <table className={styles.accountTable} aria-label="Workload account breakdown">
+          <h3 className={styles.sectionTitle}>{t.perAccount}</h3>
+          <table className={styles.accountTable} aria-label={t.perAccount}>
             <thead>
               <tr>
-                <th scope="col">Account</th>
-                <th scope="col">Subnets</th>
-                <th scope="col">Usable IPs</th>
+                <th scope="col">{t.workloadAccount}</th>
+                <th scope="col">{t.totalSubnets}</th>
+                <th scope="col">{t.usableHosts}</th>
                 <th scope="col">%</th>
               </tr>
             </thead>
@@ -151,9 +154,9 @@ export function SummaryPanel() {
       {/* Reserved Addresses */}
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>
-          Reserved Addresses ({providerProfile.reservedIPs} per subnet)
+          {t.reservedPerSubnet.replace('{count}', String(providerProfile.reservedIPs))}
         </h3>
-        <ul className={styles.reservedList} aria-label="Reserved address reasons">
+        <ul className={styles.reservedList} aria-label={t.reservedPerSubnet.replace('{count}', String(providerProfile.reservedIPs))}>
           {providerProfile.reservedReasons.map((reason) => (
             <li key={reason} className={styles.reservedItem}>
               <span className={styles.reservedBullet} aria-hidden="true" />
