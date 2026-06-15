@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store/app-store';
 import { adjustToNetworkAddress, numberToIp, ipToNumber, computeSubnetInfo } from '../../core/subnet-calculator';
 import type { ValidationResult, SubnetInfo } from '../../core/types';
@@ -55,9 +55,24 @@ export function CIDRInput() {
   const [subnetInfo, setSubnetInfo] = useState<SubnetInfo | null>(null);
   const [vpcWarning, setVpcWarning] = useState<string | null>(null);
   const [rfc1918Warning, setRfc1918Warning] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const setRootCIDR = useAppStore((state) => state.setRootCIDR);
   const providerProfile = useAppStore((state) => state.providerProfile);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   /**
    * Derive the currently-selected prefix from the text input.
@@ -76,23 +91,19 @@ export function CIDRInput() {
   /**
    * Handle dropdown selection — update the text input's prefix portion.
    */
-  const handlePrefixSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newPrefix = e.target.value;
-    if (!newPrefix) return;
-
+  const handlePrefixSelect = (prefix: number) => {
+    const newPrefix = String(prefix);
     const trimmed = inputValue.trim();
     const slashIdx = trimmed.lastIndexOf('/');
 
     if (slashIdx !== -1) {
-      // Replace existing prefix
       setInputValue(trimmed.slice(0, slashIdx + 1) + newPrefix);
     } else if (trimmed.length > 0) {
-      // Append prefix to existing IP
       setInputValue(trimmed + '/' + newPrefix);
     } else {
-      // No IP entered yet, just set the prefix placeholder
       setInputValue('/' + newPrefix);
     }
+    setDropdownOpen(false);
   };
 
   const handleSubmit = () => {
@@ -172,21 +183,35 @@ export function CIDRInput() {
           aria-describedby={hasError ? errorId : undefined}
           aria-invalid={hasError}
         />
-        <select
-          className={styles.prefixSelect}
-          value={selectedPrefix !== null ? String(selectedPrefix) : ''}
-          onChange={handlePrefixSelect}
-          aria-label="CIDR prefix length selector"
-        >
-          <option value="" disabled>
-            /prefix
-          </option>
-          {PREFIX_OPTIONS.map(({ prefix, totalAddresses }) => (
-            <option key={prefix} value={String(prefix)}>
-              /{prefix} — {totalAddresses.toLocaleString()} addr
-            </option>
-          ))}
-        </select>
+        <div className={styles.prefixDropdown} ref={dropdownRef}>
+          <button
+            type="button"
+            className={styles.prefixTrigger}
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            aria-label="CIDR prefix length selector"
+            aria-expanded={dropdownOpen}
+            aria-haspopup="listbox"
+          >
+            {selectedPrefix !== null ? `/${selectedPrefix}` : '/prefix'}
+            <span className={styles.prefixArrow} aria-hidden="true">▾</span>
+          </button>
+          {dropdownOpen && (
+            <ul className={styles.prefixList} role="listbox" aria-label="Prefix length options">
+              {PREFIX_OPTIONS.map(({ prefix, totalAddresses }) => (
+                <li
+                  key={prefix}
+                  role="option"
+                  aria-selected={prefix === selectedPrefix}
+                  className={`${styles.prefixOption} ${prefix === selectedPrefix ? styles.prefixOptionSelected : ''}`}
+                  onClick={() => handlePrefixSelect(prefix)}
+                >
+                  <span className={styles.prefixOptionMask}>/{prefix}</span>
+                  <span className={styles.prefixOptionDetail}>{totalAddresses.toLocaleString()} addr</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <button
           type="button"
           className={styles.submitButton}
