@@ -22,6 +22,8 @@ A web application for IP Address Management (IPAM) designed for customers planni
 - **Cloud_Provider_Profile**: A configuration defining reserved IP addresses, subnet limits, and available use-case tags for a specific Target_Cloud
 - **Branding_Configuration**: A JSON configuration or environment variable set that defines the white-label appearance including logo, colors, title, and favicon
 - **Cloud_Visual_Theme**: The set of accent colors, icons, and visual indicators associated with a specific Target_Cloud selection
+- **CIDR_Suffix_Selector**: A dropdown control for selecting the prefix length (/8 to /28) that synchronizes bidirectionally with the CIDR text input
+- **Reverse_CIDR_Calculator**: A function that determines the smallest prefix length (largest subnet) required to accommodate a given number of usable IP addresses after provider-reserved addresses are subtracted
 
 ## Requirements
 
@@ -188,6 +190,35 @@ A web application for IP Address Management (IPAM) designed for customers planni
 5. THE IPAM_App SHALL display the cloud provider icon in the VPC Planning Summary panel header to reinforce the active Target_Cloud context
 6. THE IPAM_App SHALL ensure that cloud-specific accent colors do not override the white-label primary and secondary brand colors configured in Requirement 11, but instead complement them as tertiary visual accents applied only to cloud-context elements (provider icon backgrounds, tag color coding, and subnet visualization borders)
 7. IF the Target_Cloud is Private Cloud, THEN THE IPAM_App SHALL display a generic cloud icon and allow the User to optionally upload a custom icon (SVG or PNG, maximum 64x64 pixels, maximum 100 KB) to represent their private cloud environment
+
+### Requirement 13: CIDR Suffix Dropdown Selector
+
+**User Story:** As a User, I want a dropdown selector for the CIDR prefix length alongside the text input, so that I can quickly choose common prefix lengths without typing, while still having the option to type the full CIDR manually.
+
+#### Acceptance Criteria
+
+1. THE IPAM_App SHALL display a CIDR_Suffix_Selector dropdown adjacent to the network address input field, offering prefix length options from /8 to /28
+2. THE CIDR_Suffix_Selector SHALL display each option with its prefix length and the corresponding total address count (e.g., "/16 — 65,536 addresses")
+3. WHEN the User selects a prefix length from the CIDR_Suffix_Selector dropdown, THE IPAM_App SHALL update the CIDR text input field to reflect the selected prefix length appended to the current network address
+4. WHEN the User manually types or modifies the CIDR text input and the input contains a valid prefix length (e.g., 10.0.0.1/16), THE CIDR_Suffix_Selector SHALL automatically update to show the matching prefix length without requiring additional user action
+5. THE IPAM_App SHALL keep the CIDR_Suffix_Selector and the text input field synchronized bidirectionally at all times — changes in either control are immediately reflected in the other
+6. WHEN the CIDR text input does not contain a valid prefix length, THE CIDR_Suffix_Selector SHALL display no selection (blank/placeholder state) until a valid prefix is entered or selected
+7. THE IPAM_App SHALL continue to accept manually typed CIDR notation in the text input field regardless of whether the dropdown is used, preserving full backward compatibility with Requirement 2
+
+### Requirement 14: Workload Capacity Planning with Reverse CIDR Calculation
+
+**User Story:** As a User, I want to create a workload by specifying how many usable IP addresses I need, so that the tool suggests the appropriate subnet size and I can plan capacity without manually calculating CIDR prefixes.
+
+#### Acceptance Criteria
+
+1. THE IPAM_App SHALL provide a "Create Workload" button that initiates a workload capacity planning flow
+2. WHEN the User clicks the "Create Workload" button, THE IPAM_App SHALL display a dialog prompting the User to enter: a workload name (1 to 64 characters) and the number of required usable IP addresses (positive integer, minimum 1, maximum 16,777,214)
+3. WHEN the User submits the required IP count, THE Reverse_CIDR_Calculator SHALL determine the smallest prefix length (largest subnet) that provides at least the requested number of usable IP addresses after subtracting the active Cloud_Provider_Profile's reserved address count
+4. THE IPAM_App SHALL display the suggested prefix length, the total addresses in that subnet, the usable addresses after provider reservations, and the surplus (usable minus requested) to the User before confirming the allocation
+5. IF the requested number of usable IPs exceeds the capacity of the root CIDR_Block after reserved address deductions, THEN THE IPAM_App SHALL display an error indicating that the current root network is too small to accommodate the requested workload and SHALL not create the workload
+6. WHEN the User confirms the suggested allocation, THE IPAM_App SHALL automatically find the first available (untagged, unsplit) leaf subnet of the suggested prefix length within the tree, or perform the necessary split operations to create one, assign the workload name as the subnet text label, and assign the workload name as the Workload_Account identifier
+7. IF no contiguous address space of the suggested prefix length is available in the current tree, THEN THE IPAM_App SHALL inform the User that there is insufficient contiguous space and suggest the User reorganize the plan or use a larger root CIDR_Block
+8. THE Reverse_CIDR_Calculator SHALL account for the active Cloud_Provider_Profile reserved IPs when computing the suggested prefix, ensuring that the formula used is: find smallest P (8 ≤ P ≤ 30) where (2^(32-P) - reservedCount) ≥ requestedUsableIPs
 
 ---
 

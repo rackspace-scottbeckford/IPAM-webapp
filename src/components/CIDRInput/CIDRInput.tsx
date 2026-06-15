@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAppStore } from '../../store/app-store';
 import { adjustToNetworkAddress, numberToIp, ipToNumber, computeSubnetInfo } from '../../core/subnet-calculator';
 import type { ValidationResult, SubnetInfo } from '../../core/types';
 import styles from './CIDRInput.module.css';
+
+/** Prefix options for the CIDR suffix dropdown (/8 to /28). */
+const PREFIX_OPTIONS = Array.from({ length: 21 }, (_, i) => {
+  const prefix = i + 8;
+  const totalAddresses = Math.pow(2, 32 - prefix);
+  return { prefix, totalAddresses };
+});
 
 /**
  * Check if a network address falls within RFC 1918 private address ranges:
@@ -37,8 +44,9 @@ function isRfc1918(networkBits: number, prefix: number): boolean {
 /**
  * CIDRInput component for entering a network address in CIDR notation.
  *
+ * Includes a bidirectionally-synchronized dropdown for prefix length selection.
  * Validates input, auto-adjusts host bits, and displays computed subnet info.
- * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
+ * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 13.1–13.7
  */
 export function CIDRInput() {
   const [inputValue, setInputValue] = useState('');
@@ -50,6 +58,42 @@ export function CIDRInput() {
 
   const setRootCIDR = useAppStore((state) => state.setRootCIDR);
   const providerProfile = useAppStore((state) => state.providerProfile);
+
+  /**
+   * Derive the currently-selected prefix from the text input.
+   * Returns the prefix number if valid, or null if no valid prefix is detected.
+   */
+  const selectedPrefix = useMemo<number | null>(() => {
+    const trimmed = inputValue.trim();
+    const slashIdx = trimmed.lastIndexOf('/');
+    if (slashIdx === -1) return null;
+    const prefixStr = trimmed.slice(slashIdx + 1);
+    const prefix = Number(prefixStr);
+    if (!Number.isInteger(prefix) || prefix < 8 || prefix > 28) return null;
+    return prefix;
+  }, [inputValue]);
+
+  /**
+   * Handle dropdown selection — update the text input's prefix portion.
+   */
+  const handlePrefixSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newPrefix = e.target.value;
+    if (!newPrefix) return;
+
+    const trimmed = inputValue.trim();
+    const slashIdx = trimmed.lastIndexOf('/');
+
+    if (slashIdx !== -1) {
+      // Replace existing prefix
+      setInputValue(trimmed.slice(0, slashIdx + 1) + newPrefix);
+    } else if (trimmed.length > 0) {
+      // Append prefix to existing IP
+      setInputValue(trimmed + '/' + newPrefix);
+    } else {
+      // No IP entered yet, just set the prefix placeholder
+      setInputValue('/' + newPrefix);
+    }
+  };
 
   const handleSubmit = () => {
     const trimmed = inputValue.trim();
@@ -128,6 +172,21 @@ export function CIDRInput() {
           aria-describedby={hasError ? errorId : undefined}
           aria-invalid={hasError}
         />
+        <select
+          className={styles.prefixSelect}
+          value={selectedPrefix !== null ? String(selectedPrefix) : ''}
+          onChange={handlePrefixSelect}
+          aria-label="CIDR prefix length selector"
+        >
+          <option value="" disabled>
+            /prefix
+          </option>
+          {PREFIX_OPTIONS.map(({ prefix, totalAddresses }) => (
+            <option key={prefix} value={String(prefix)}>
+              /{prefix} — {totalAddresses.toLocaleString()} addr
+            </option>
+          ))}
+        </select>
         <button
           type="button"
           className={styles.submitButton}

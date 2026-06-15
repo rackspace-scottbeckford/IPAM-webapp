@@ -57,6 +57,29 @@
   background-color: #1e40af;
 }
 
+.prefixSelect {
+  padding: 0.5rem 0.5rem;
+  font-size: 0.875rem;
+  font-family: monospace;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 160px;
+}
+
+.prefixSelect:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.prefixSelect:hover {
+  border-color: #9ca3af;
+}
+
 .error {
   display: flex;
   align-items: flex-start;
