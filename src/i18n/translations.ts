@@ -106,6 +106,7 @@ export interface Translations {
 
   // Warnings
   vpcSizeWarning: string;
+  dockerConflictWarning: string;
   rfc1918Warning: string;
   adjustedNotification: string;
 
@@ -201,7 +202,8 @@ export const en: Translations = {
   startOver: 'Start over',
   switchToCloud: 'Switch to',
 
-  vpcSizeWarning: 'Note: {provider} VPC CIDR blocks can be at most /{prefix}. This address space will need to be split across multiple VPCs.',
+  vpcSizeWarning: 'Note: In {provider} the largest allowable IPv4 CIDR block size within a VPC is /{prefix}. This root CIDR block will need to be split across multiple VPCs.',
+  dockerConflictWarning: 'Warning: The 172.17.0.0/16 range conflicts with the default Docker bridge network (docker0). AWS recommends avoiding this CIDR block to prevent routing issues with containerized workloads.',
   rfc1918Warning: 'Warning: This address is outside RFC 1918 private space (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16). Cloud VPCs typically use private addresses.',
   adjustedNotification: 'Adjusted to network address: {corrected} (entered: {entered})',
 
@@ -296,7 +298,8 @@ export const de: Translations = {
   startOver: 'Neu beginnen',
   switchToCloud: 'Wechseln zu',
 
-  vpcSizeWarning: 'Hinweis: {provider} VPC-CIDR-Blöcke können maximal /{prefix} groß sein. Dieser Adressraum muss auf mehrere VPCs aufgeteilt werden.',
+  vpcSizeWarning: 'Hinweis: In {provider} ist die größte zulässige IPv4-CIDR-Blockgröße innerhalb eines VPCs /{prefix}. Dieser Root-CIDR-Block muss auf mehrere VPCs aufgeteilt werden.',
+  dockerConflictWarning: 'Warnung: Der Bereich 172.17.0.0/16 steht in Konflikt mit dem Standard-Docker-Bridge-Netzwerk (docker0). AWS empfiehlt, diesen CIDR-Block zu vermeiden, um Routing-Probleme mit containerisierten Workloads zu verhindern.',
   rfc1918Warning: 'Warnung: Diese Adresse liegt außerhalb des RFC 1918 privaten Adressraums (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16). Cloud-VPCs verwenden typischerweise private Adressen.',
   adjustedNotification: 'Auf Netzwerkadresse angepasst: {corrected} (eingegeben: {entered})',
 
