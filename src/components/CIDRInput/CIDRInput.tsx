@@ -147,7 +147,7 @@ export function CIDRInput() {
 
     // Check VPC size warning
     if (providerProfile && enteredPrefix < providerProfile.maxVpcPrefix) {
-      setVpcWarning(`Note: ${providerProfile.displayName} VPCs support a maximum of /${providerProfile.maxVpcPrefix}. This address space is larger than a single VPC.`);
+      setVpcWarning(t.vpcSizeWarning.replace('{provider}', providerProfile.displayName).replace('{prefix}', String(providerProfile.maxVpcPrefix)));
     } else {
       setVpcWarning(null);
     }
@@ -155,7 +155,7 @@ export function CIDRInput() {
     // Check RFC 1918 private address space warning
     const networkBits = adjusted.networkAddress.bits;
     if (!isRfc1918(networkBits, enteredPrefix)) {
-      setRfc1918Warning('Warning: This address is outside RFC 1918 private space (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16). Cloud VPCs typically use private addresses.');
+      setRfc1918Warning(t.rfc1918Warning);
     } else {
       setRfc1918Warning(null);
     }
