@@ -201,7 +201,7 @@ export const en: Translations = {
   startOver: 'Start over',
   switchToCloud: 'Switch to',
 
-  vpcSizeWarning: 'Note: {provider} VPCs support a maximum of /{prefix}. This address space is larger than a single VPC.',
+  vpcSizeWarning: 'Note: {provider} VPC CIDR blocks can be at most /{prefix}. This address space will need to be split across multiple VPCs.',
   rfc1918Warning: 'Warning: This address is outside RFC 1918 private space (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16). Cloud VPCs typically use private addresses.',
   adjustedNotification: 'Adjusted to network address: {corrected} (entered: {entered})',
 
@@ -296,7 +296,7 @@ export const de: Translations = {
   startOver: 'Neu beginnen',
   switchToCloud: 'Wechseln zu',
 
-  vpcSizeWarning: 'Hinweis: {provider} VPCs unterstützen maximal /{prefix}. Dieser Adressraum ist größer als ein einzelnes VPC.',
+  vpcSizeWarning: 'Hinweis: {provider} VPC-CIDR-Blöcke können maximal /{prefix} groß sein. Dieser Adressraum muss auf mehrere VPCs aufgeteilt werden.',
   rfc1918Warning: 'Warnung: Diese Adresse liegt außerhalb des RFC 1918 privaten Adressraums (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16). Cloud-VPCs verwenden typischerweise private Adressen.',
   adjustedNotification: 'Auf Netzwerkadresse angepasst: {corrected} (eingegeben: {entered})',
 
