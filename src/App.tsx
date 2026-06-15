@@ -8,6 +8,7 @@ import { TreeVisualizer } from './components/TreeVisualizer/TreeVisualizer';
 import { GroupedView } from './components/GroupedView/GroupedView';
 import { SummaryPanel } from './components/SummaryPanel/SummaryPanel';
 import { FileControls } from './components/FileControls/FileControls';
+import { CreateWorkload } from './components/CreateWorkload/CreateWorkload';
 import { ToastContainer } from './components/Toast/Toast';
 import { AnnouncerProvider } from './components/Announcer/Announcer';
 import styles from './App.module.css';
@@ -34,6 +35,7 @@ function App() {
               <div className={styles.workspace}>
                 <div className={styles.toolbar}>
                   <CIDRInput />
+                  <CreateWorkload />
                   <FileControls />
                 </div>
                 {networkPlan && <ViewToggle activeView={activeView} />}
