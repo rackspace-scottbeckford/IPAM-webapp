@@ -655,6 +655,38 @@ interface AppState {
 | Title >64 chars | Console warning: "Title exceeds 64 chars, using default" | Rackspace title used |
 | Unsupported image format | Console warning: "Unsupported format, using default" | Rackspace default for that asset |
 
+## Additional Components (Post-Initial Design)
+
+### CIDR Suffix Dropdown (Requirement 13)
+
+A custom dropdown adjacent to the CIDR text input that offers prefix lengths /8 to /28. The trigger button shows only the mask (e.g., `/16`); the expanded list shows prefix + total address count. Bidirectional sync: typing a CIDR updates the dropdown selection; selecting from the dropdown updates the text input prefix.
+
+### Reverse CIDR Calculator (Requirement 14)
+
+A pure-function module (`src/core/reverse-cidr-calculator.ts`) that determines the smallest prefix providing at least N usable IPs after provider reservations. Used by the "Create Workload" dialog to suggest subnet allocations. Includes tree-search logic to find available space and calculate required split operations.
+
+```typescript
+interface ReverseCIDRResult {
+  suggestedPrefix: number;
+  totalAddresses: number;
+  usableAddresses: number;
+  surplus: number;
+}
+
+function calculateReverseCIDR(requestedUsableIPs: number, reservedCount: number): ReverseCIDRResult | ReverseCIDRError;
+function findAvailableLeaf(tree: SubnetNode, targetPrefix: number): string | null;
+```
+
+### Internationalization / Language Toggle (Requirement 15)
+
+Lightweight i18n system using a Zustand store (`src/i18n/`):
+
+- `translations.ts` — typed EN/DE dictionaries covering all UI strings
+- `i18n-store.ts` — exposes `language`, `t` (current translations), and `setLanguage()`
+- Language toggle (EN | DE) rendered in the header below the Rackspace logo
+- Title always stays English; all other UI text switches instantly on toggle
+- Components consume translations via `useI18n()` hook: `const { t } = useI18n()`
+
 ## Testing Strategy
 
 ### Testing Approach
