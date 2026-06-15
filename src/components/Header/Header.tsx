@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppStore } from '../../store/app-store';
+import { useI18n } from '../../i18n';
 import { applyBrandTheme } from '../../theme/theme-engine';
 import type { TargetCloud } from '../../core/types';
 import styles from './Header.module.css';
@@ -73,8 +74,11 @@ export function Header() {
         </button>
       )}
 
-      {/* Rackspace logo (right side) */}
-      <RackspaceLogo />
+      {/* Rackspace logo + language toggle (right side) */}
+      <div className={styles.rightSection}>
+        <RackspaceLogo />
+        <LanguageToggle />
+      </div>
 
       {/* Cloud change dialog */}
       {showChangeDialog && (
@@ -188,5 +192,35 @@ function CloudProviderLogo({ cloud }: { cloud: string }) {
       alt={altMap[cloud] ?? 'Cloud Provider'}
       className={styles.cloudIcon}
     />
+  );
+}
+
+/**
+ * Language toggle between EN and DE.
+ * Placed just under the Rackspace logo in the header.
+ */
+function LanguageToggle() {
+  const language = useI18n((s) => s.language);
+  const setLanguage = useI18n((s) => s.setLanguage);
+
+  return (
+    <div className={styles.languageToggle} role="group" aria-label="Language selection">
+      <button
+        type="button"
+        className={`${styles.langButton} ${language === 'en' ? styles.langButtonActive : ''}`}
+        onClick={() => setLanguage('en')}
+        aria-pressed={language === 'en'}
+      >
+        EN
+      </button>
+      <button
+        type="button"
+        className={`${styles.langButton} ${language === 'de' ? styles.langButtonActive : ''}`}
+        onClick={() => setLanguage('de')}
+        aria-pressed={language === 'de'}
+      >
+        DE
+      </button>
+    </div>
   );
 }
