@@ -12,10 +12,13 @@ Network planning for cloud migrations is tedious. Engineers typically work in sp
 
 - **Visual subnet splitting** — see your CIDR hierarchy as a tree, split with one click
 - **Provider-aware math** — automatically deducts reserved IPs per cloud provider (AWS: 5, Azure: 5, GCP: 4, Private: 2)
+- **CIDR suffix dropdown** — quick-select prefix length (/8–/28) from a dropdown, synced bidirectionally with the text input
+- **Workload capacity planning** — specify how many IPs you need, the tool calculates and allocates the right subnet size
 - **Subnet limit warnings** — alerts when you exceed provider VPC/VNet limits
 - **Portable plans** — export/import as JSON, share via URL
 - **Offline-first** — runs entirely in your browser after initial load, no data leaves your machine
 - **White-label ready** — configurable branding for customer deployments
+- **Multi-language** — EN/DE language toggle with instant switching (title always English)
 
 ## What
 
@@ -23,14 +26,17 @@ Network planning for cloud migrations is tedious. Engineers typically work in sp
 
 - Select target cloud (AWS, Azure, GCP, Private Cloud)
 - Enter a root CIDR block (/8 to /30)
+- **CIDR suffix dropdown** — select prefix from a compact dropdown showing just the mask; expanded list shows address counts
 - Split subnets visually into binary subdivisions
 - Join subnets back together
+- **Create Workload** — specify required usable IPs, the tool suggests the smallest suitable prefix and auto-allocates a subnet
 - Add free-text labels (comments) to any subnet
 - Assign IaC tags for infrastructure-as-code exports
 - Set workload accounts and availability zones
 - View VPC planning summary (subnet counts, usable IPs, allocation percentage)
 - Export/import plans as JSON files
 - Share plans via URL (state encoded in hash)
+- **Language toggle (EN/DE)** — switch between English and German; title stays English, all other UI text translates instantly
 - Works offline as a PWA (Progressive Web App)
 - Keyboard accessible with screen reader support
 
@@ -76,6 +82,7 @@ src/
 ├── core/                    # Pure-function modules (no UI dependency)
 │   ├── types.ts             # TypeScript interfaces and type definitions
 │   ├── subnet-calculator.ts # IPv4 arithmetic, subnet info computation
+│   ├── reverse-cidr-calculator.ts # Reverse CIDR: required IPs → suggested prefix
 │   ├── tree-operations.ts   # Split, join, tree traversal, tag management
 │   ├── input-validator.ts   # CIDR validation, text field validation
 │   └── summary-calculator.ts # VPC planning summary computation
@@ -86,6 +93,10 @@ src/
 │   └── plan-serializer.ts   # JSON export/import, URL encoding/decoding
 ├── store/                   # State management
 │   └── app-store.ts         # Zustand store with all actions
+├── i18n/                    # Internationalization
+│   ├── translations.ts      # EN and DE translation dictionaries
+│   ├── i18n-store.ts        # Zustand-based language store
+│   └── index.ts             # Public exports
 ├── theme/                   # Branding and theming
 │   ├── branding-config.ts   # White-label config loader with fallbacks
 │   ├── theme-engine.ts      # CSS custom property management
@@ -94,9 +105,10 @@ src/
 │   ├── useURLSync.ts        # URL state synchronization
 │   └── useTreeKeyboardNav.ts # Keyboard navigation for tree
 ├── components/              # React UI components
-│   ├── Header/              # App header with branding
+│   ├── Header/              # App header with branding + language toggle
 │   ├── CloudSelector/       # Cloud provider selection screen
-│   ├── CIDRInput/           # Network address input with validation
+│   ├── CIDRInput/           # Network address input with prefix dropdown
+│   ├── CreateWorkload/      # Workload capacity planning dialog
 │   ├── TreeVisualizer/      # Hierarchical subnet tree with split/join
 │   ├── GroupedView/         # Subnets grouped by tag
 │   ├── SubnetDetails/       # Tag and metadata editing panel
@@ -158,6 +170,15 @@ Invalid values fall back to Rackspace defaults per field.
 - No telemetry, analytics, or outbound data transmission
 - Plans are stored in the URL hash or exported as local JSON files
 - Works fully offline after initial page load (PWA with service worker)
+
+### Language / i18n
+
+The tool supports English (EN) and German (DE). A toggle in the header (below the Rackspace logo) switches instantly — no reload needed.
+
+- The application **title always stays in English** regardless of language
+- All other UI text (labels, buttons, messages, errors, dialogs) translates
+- Default language: English
+- Translations live in `src/i18n/translations.ts` — add new languages by extending the `translations` map
 
 ## Deployment
 

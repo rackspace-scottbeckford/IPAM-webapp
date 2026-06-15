@@ -24,6 +24,7 @@ A web application for IP Address Management (IPAM) designed for customers planni
 - **Cloud_Visual_Theme**: The set of accent colors, icons, and visual indicators associated with a specific Target_Cloud selection
 - **CIDR_Suffix_Selector**: A dropdown control for selecting the prefix length (/8 to /28) that synchronizes bidirectionally with the CIDR text input
 - **Reverse_CIDR_Calculator**: A function that determines the smallest prefix length (largest subnet) required to accommodate a given number of usable IP addresses after provider-reserved addresses are subtracted
+- **Language_Toggle**: A UI control that switches the application interface between English (EN) and German (DE), with the title always remaining in English
 
 ## Requirements
 
@@ -219,6 +220,20 @@ A web application for IP Address Management (IPAM) designed for customers planni
 6. WHEN the User confirms the suggested allocation, THE IPAM_App SHALL automatically find the first available (untagged, unsplit) leaf subnet of the suggested prefix length within the tree, or perform the necessary split operations to create one, assign the workload name as the subnet text label, and assign the workload name as the Workload_Account identifier
 7. IF no contiguous address space of the suggested prefix length is available in the current tree, THEN THE IPAM_App SHALL inform the User that there is insufficient contiguous space and suggest the User reorganize the plan or use a larger root CIDR_Block
 8. THE Reverse_CIDR_Calculator SHALL account for the active Cloud_Provider_Profile reserved IPs when computing the suggested prefix, ensuring that the formula used is: find smallest P (8 ≤ P ≤ 30) where (2^(32-P) - reservedCount) ≥ requestedUsableIPs
+
+### Requirement 15: Language Toggle (EN/DE)
+
+**User Story:** As a User, I want to switch the application interface between English and German, so that I can use the tool in my preferred language.
+
+#### Acceptance Criteria
+
+1. THE IPAM_App SHALL display a language toggle control with options EN and DE, positioned in the application header directly below the Rackspace logo
+2. WHEN the User selects DE, THE IPAM_App SHALL translate all UI labels, button text, error messages, tooltips, dialog content, and descriptions into German
+3. THE IPAM_App SHALL always display the application title in English regardless of the selected language
+4. WHEN the User switches language, THE IPAM_App SHALL update all visible text immediately without requiring a page reload
+5. THE IPAM_App SHALL default to English (EN) on initial load
+6. THE IPAM_App SHALL visually indicate the currently active language in the toggle control using a distinct active state (e.g., highlighted background)
+7. THE language toggle SHALL be keyboard accessible and include appropriate ARIA attributes (aria-pressed or aria-selected) indicating the active language
 
 ---
 
