@@ -8,6 +8,7 @@ const CLOUD_OPTIONS: { id: TargetCloud; label: string; accent: string; icon: str
   { id: 'aws', label: 'Amazon Web Services', accent: '#FF9900', icon: '/icons/aws.svg' },
   { id: 'azure', label: 'Microsoft Azure', accent: '#0078D4', icon: '/icons/azure.svg' },
   { id: 'gcp', label: 'Google Cloud Platform', accent: '#4285F4', icon: '/icons/gcp.svg' },
+  { id: 'stackit', label: 'STACKIT Cloud', accent: '#1A5C5C', icon: '/icons/stackit-logo.svg' },
   { id: 'private', label: 'Private Cloud', accent: '#6B7280', icon: '/icons/private-cloud.svg' },
 ];
 

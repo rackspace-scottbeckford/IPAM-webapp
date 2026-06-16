@@ -77,6 +77,26 @@ export const PRIVATE_PROFILE: CloudProviderProfile = {
   iconPath: 'icons/private-cloud.svg',
 };
 
+export const STACKIT_PROFILE: CloudProviderProfile = {
+  cloudId: 'stackit',
+  displayName: 'STACKIT Cloud',
+  reservedIPs: 4,
+  reservedReasons: ['Network address', 'Gateway', 'DHCP agent', 'Broadcast'],
+  subnetLimit: 500,
+  minSubnetPrefix: 29,
+  maxVpcPrefix: 8,
+  defaultTags: [
+    { id: 'stackit-wl', name: 'workload', isCustom: false, color: '#1A5C5C' },
+    { id: 'stackit-mgmt', name: 'management', isCustom: false, color: '#2D8A8A' },
+    { id: 'stackit-db', name: 'database', isCustom: false, color: '#14B8A6' },
+    { id: 'stackit-k8s', name: 'kubernetes', isCustom: false, color: '#326CE5' },
+    { id: 'stackit-ss', name: 'shared-services', isCustom: false, color: '#7C3AED' },
+    { id: 'stackit-lb', name: 'load-balancer', isCustom: false, color: '#F59E0B' },
+  ],
+  accentColor: '#1A5C5C',
+  iconPath: 'icons/stackit-logo.svg',
+};
+
 /**
  * Returns the CloudProviderProfile for the given target cloud.
  */
@@ -88,6 +108,8 @@ export function getProfile(cloud: TargetCloud): CloudProviderProfile {
       return AZURE_PROFILE;
     case 'gcp':
       return GCP_PROFILE;
+    case 'stackit':
+      return STACKIT_PROFILE;
     case 'private':
       return PRIVATE_PROFILE;
   }

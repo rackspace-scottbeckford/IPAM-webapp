@@ -75,7 +75,7 @@ export type UseCaseTag = {
 /**
  * Supported target cloud platforms.
  */
-export type TargetCloud = 'aws' | 'azure' | 'gcp' | 'private';
+export type TargetCloud = 'aws' | 'azure' | 'gcp' | 'stackit' | 'private';
 
 /**
  * Configuration defining reserved IPs, subnet limits, and available tags for a cloud provider.

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" fill="none">
+  <rect width="200" height="50" fill="white"/>
+  <!-- STACKIT "S" mark -->
+  <path d="M8 10h20v10H8V10z M18 20h20v10H18V20z M8 30h20v10H8V30z" fill="#1A5C5C"/>
+  <!-- STACKIT text -->
+  <text x="52" y="33" font-family="Arial, sans-serif" font-size="20" font-weight="600" fill="#1A5C5C" letter-spacing="2">STACKIT</text>
+  <!-- Tagline -->
+  <text x="52" y="45" font-family="Arial, sans-serif" font-size="8" fill="#1A5C5C">A Brand of Schwarz Digits</text>
+</svg>
