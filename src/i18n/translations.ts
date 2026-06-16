@@ -19,6 +19,7 @@ export interface Translations {
   aws: string;
   azure: string;
   gcp: string;
+  stackit: string;
   privateCloud: string;
 
   // CIDR Input
@@ -126,6 +127,7 @@ export const en: Translations = {
   aws: 'Amazon Web Services',
   azure: 'Microsoft Azure',
   gcp: 'Google Cloud Platform',
+  stackit: 'STACKIT Cloud',
   privateCloud: 'Private Cloud',
 
   cidrPlaceholder: 'e.g., 10.0.0.0/16',
@@ -222,6 +224,7 @@ export const de: Translations = {
   aws: 'Amazon Web Services',
   azure: 'Microsoft Azure',
   gcp: 'Google Cloud Platform',
+  stackit: 'STACKIT Cloud',
   privateCloud: 'Private Cloud',
 
   cidrPlaceholder: 'z.B. 10.0.0.0/16',

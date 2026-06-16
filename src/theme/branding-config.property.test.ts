@@ -303,10 +303,11 @@ describe('Property 26: Cloud accent colors do not override brand colors', () => 
     aws: '#FF9900',
     azure: '#0078D4',
     gcp: '#4285F4',
+    stackit: '#1A5C5C',
     private: '#6B7280',
   };
 
-  const targetCloudArb = fc.constantFrom<TargetCloud>('aws', 'azure', 'gcp', 'private');
+  const targetCloudArb = fc.constantFrom<TargetCloud>('aws', 'azure', 'gcp', 'stackit', 'private');
 
   // --- Property Tests ---
 

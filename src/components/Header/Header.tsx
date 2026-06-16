@@ -9,6 +9,7 @@ const CLOUD_OPTIONS: { id: TargetCloud; label: string }[] = [
   { id: 'aws', label: 'Amazon Web Services' },
   { id: 'azure', label: 'Microsoft Azure' },
   { id: 'gcp', label: 'Google Cloud Platform' },
+  { id: 'stackit', label: 'STACKIT Cloud' },
   { id: 'private', label: 'Private Cloud' },
 ];
 
@@ -176,6 +177,7 @@ function CloudProviderLogo({ cloud }: { cloud: string }) {
     aws: `${base}icons/aws logo.png`,
     azure: `${base}icons/azure logo.jpeg`,
     gcp: `${base}icons/GCP logo.png`,
+    stackit: `${base}icons/stackit-logo.svg`,
     private: `${base}icons/private-cloud.svg`,
   };
 
@@ -184,6 +186,7 @@ function CloudProviderLogo({ cloud }: { cloud: string }) {
     aws: 'Amazon Web Services',
     azure: 'Microsoft Azure',
     gcp: 'Google Cloud Platform',
+    stackit: 'STACKIT Cloud',
     private: 'Private Cloud',
   };
 
