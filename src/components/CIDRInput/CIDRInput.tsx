@@ -67,7 +67,8 @@ function overlapsDockerBridge(networkBits: number, prefix: number): boolean {
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 13.1–13.7
  */
 export function CIDRInput() {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState('10.0.0.0/12');
+  const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [adjustment, setAdjustment] = useState<{ entered: string; corrected: string } | null>(null);
   const [subnetInfo, setSubnetInfo] = useState<SubnetInfo | null>(null);
@@ -79,7 +80,22 @@ export function CIDRInput() {
 
   const setRootCIDR = useAppStore((state) => state.setRootCIDR);
   const providerProfile = useAppStore((state) => state.providerProfile);
+  const networkPlan = useAppStore((state) => state.networkPlan);
   const t = useI18n((s) => s.t);
+
+  // Auto-submit 10.0.0.0/12 on first load when cloud is selected but no plan exists
+  useEffect(() => {
+    if (providerProfile && !networkPlan && !hasAutoSubmitted) {
+      setHasAutoSubmitted(true);
+      const result = setRootCIDR('10.0.0.0/12');
+      if (result.valid) {
+        const reservedCount = providerProfile.reservedIPs;
+        const adjusted = adjustToNetworkAddress(ipToNumber('10.0.0.0'), 12);
+        const info = computeSubnetInfo(adjusted, reservedCount);
+        setSubnetInfo(info);
+      }
+    }
+  }, [providerProfile, networkPlan, hasAutoSubmitted, setRootCIDR]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
