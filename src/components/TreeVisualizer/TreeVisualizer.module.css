@@ -23,7 +23,13 @@
   border-left: 1px solid #d1d5db;
 }
 
-.nodeRow:first-child {
+/*
+ * Only the root node (rendered as a direct child of the container) should have
+ * no indentation. Nested nodes always live inside a `.children` group, so
+ * scoping to a direct child of `.container` avoids accidentally un-indenting
+ * every left-hand ("first") child of a split.
+ */
+.container > .nodeRow {
   border-left: none;
   margin-left: 0;
   padding-left: 0;

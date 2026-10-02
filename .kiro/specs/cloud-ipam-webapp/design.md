@@ -613,6 +613,12 @@ interface AppState {
 
 **Validates: Requirements 12.6**
 
+### Property 27: Map Existing containment, non-overlap, and placement
+
+*For any* root CIDR and target CIDR, validateMapExisting SHALL succeed if and only if the target's prefix is greater than or equal to the root's prefix, the target's address range falls entirely within the root's range, and the target does not overlap any leaf carrying a tag, workload account, or label. When it succeeds, the returned path SHALL navigate from the root to the exact target CIDR such that materializing the splits produces a node whose network address and prefix equal the target.
+
+**Validates: Requirements 16.4, 16.5, 16.6, 16.7, 16.8**
+
 ## Error Handling
 
 ### Input Validation Errors
@@ -629,6 +635,10 @@ interface AppState {
 | 6th tag assignment | Inline message: "Maximum 5 tags per subnet" | Action prevented |
 | Custom tag name too long | Inline error: "Tag name must be 1–32 characters" | Input remains editable |
 | 21st custom tag | Inline error: "Maximum 20 custom tags allowed" | Action prevented |
+| Map Existing: CIDR larger than root | Dialog error: "The CIDR /N is larger than the root network /M" | Dialog stays open, retry |
+| Map Existing: CIDR outside root range | Dialog error: "The CIDR does not fall within the root network block" | Dialog stays open, retry |
+| Map Existing: overlaps allocation | Dialog error: "The CIDR overlaps an existing allocation" | Dialog stays open, retry |
+| Map Existing: already mapped | Dialog error: "This exact subnet is already allocated" | Dialog stays open, retry |
 
 ### Serialization Errors
 
@@ -676,6 +686,34 @@ interface ReverseCIDRResult {
 function calculateReverseCIDR(requestedUsableIPs: number, reservedCount: number): ReverseCIDRResult | ReverseCIDRError;
 function findAvailableLeaf(tree: SubnetNode, targetPrefix: number): string | null;
 ```
+
+### Map Existing Calculator (Requirement 16)
+
+A pure-function module (`src/core/map-existing-calculator.ts`) that validates a user-supplied, already-allocated CIDR block and computes where it belongs in the tree. Unlike the Reverse CIDR Calculator — which auto-allocates the next *free* block for a requested capacity — this places a *specific* CIDR at the position its network address dictates.
+
+The "Map Existing" dialog (`src/components/MapExisting/`) mirrors the Create Workload dialog's state machine (input → confirm → success/error) but collects a CIDR instead of an IP count. The `mapExistingCIDR` store action runs validation, then walks the computed path from the root, splitting leaves as needed and following the correct child at each level, before assigning the workload name as both label and workload account.
+
+```typescript
+interface MapExistingResult {
+  cidr: CIDRBlock;        // target, adjusted to its network address
+  path: (0 | 1)[];        // root→target child choices (0 = left/first, 1 = right/second)
+}
+
+type MapExistingError = {
+  type: 'not_contained' | 'prefix_too_small' | 'overlaps_allocation' | 'already_mapped';
+  message: string;
+};
+
+// Validate containment within root and non-overlap with assigned subnets, then
+// derive the navigation path.
+function validateMapExisting(tree: SubnetNode, rootCIDR: CIDRBlock, target: CIDRBlock): MapExistingResult | MapExistingError;
+
+// At each level from root prefix to target prefix, inspect the target network
+// bit at position (31 - currentPrefix) to decide left (0) or right (1).
+function computeSplitPath(rootCIDR: CIDRBlock, target: CIDRBlock): (0 | 1)[];
+```
+
+**Validation order:** (1) target prefix must be ≥ root prefix; (2) target range must fall entirely within the root range; (3) target must not overlap any leaf that carries a tag, workload account, or label — an exact match on an assigned leaf is reported as `already_mapped`, any other overlap as `overlaps_allocation`. A target that overlaps only unassigned leaves is accepted and materialized by splitting along the path.
 
 ### Internationalization / Language Toggle (Requirement 15)
 

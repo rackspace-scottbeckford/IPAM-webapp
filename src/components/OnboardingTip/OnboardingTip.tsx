@@ -23,14 +23,16 @@ export function OnboardingTip() {
           </strong>
           <p className={styles.description}>
             {language === 'de'
-              ? 'Teilen Sie das Netzwerk in kleinere Subnetze oder erstellen Sie einen Workload mit einer bestimmten IP-Kapazität.'
-              : 'Split the network into smaller subnets, or create a workload with a specific IP capacity.'}
+              ? 'Teilen Sie das Netzwerk in kleinere Subnetze, erstellen Sie einen Workload mit einer bestimmten IP-Kapazität oder ordnen Sie ein bereits vergebenes Subnetz zu.'
+              : 'Split the network into smaller subnets, create a workload with a specific IP capacity, or map an existing subnet you have already allocated.'}
           </p>
         </div>
         <div className={styles.actions}>
           <span className={styles.highlight}>{t.split} ↓</span>
           <span className={styles.separator}>{language === 'de' ? 'oder' : 'or'}</span>
           <span className={styles.highlight}>{t.createWorkload} →</span>
+          <span className={styles.separator}>{language === 'de' ? 'oder' : 'or'}</span>
+          <span className={styles.highlight}>{t.mapExisting} →</span>
         </div>
       </div>
       <button

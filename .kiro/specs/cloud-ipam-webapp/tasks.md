@@ -319,12 +319,35 @@ This plan implements a client-side, offline-capable IPAM web application using R
 - [x] 18. Final checkpoint — Full integration verification
   - Ensure all tests pass, ask the user if questions arise.
 
+- [x] 19. Map Existing subnet allocation (Requirement 16)
+  - [x] 19.1 Implement the Map Existing calculator
+    - Create `src/core/map-existing-calculator.ts`
+    - Implement `validateMapExisting(tree, rootCIDR, target): MapExistingResult | MapExistingError` — enforce prefix ≥ root, containment within root range, and non-overlap with assigned leaves (tag/account/label); classify exact-match on an assigned leaf as `already_mapped`
+    - Implement `computeSplitPath(rootCIDR, target): (0 | 1)[]` — derive left/right child choices from the target network bits
+    - _Requirements: 16.3, 16.4, 16.5, 16.6, 16.7, 16.8, 16.9_
+
+  - [x] 19.2 Write tests for the Map Existing calculator
+    - **Property 27: Map Existing containment, non-overlap, and placement**
+    - Cover: contained accept, larger-than-root reject, outside-root reject, overlap-with-assigned reject, exact-match already-mapped, free-half accept, and multi-level path computation
+    - **Validates: Requirements 16.4, 16.5, 16.6, 16.7, 16.8**
+
+  - [x] 19.3 Add the mapExistingCIDR store action
+    - Add `mapExistingCIDR(input, name): MapExistingSuccess | MapExistingError` to `src/store/app-store.ts`
+    - Validate CIDR syntax, adjust to network address, run `validateMapExisting`, then walk the path splitting via `splitSubnet` and following the correct child, finally assign label + workload account
+    - _Requirements: 16.3, 16.8, 16.9_
+
+  - [x] 19.4 Implement the MapExisting UI component
+    - Create `src/components/MapExisting/MapExisting.tsx` and CSS, mounted in the toolbar next to Create Workload
+    - Dialog state machine: input (name + CIDR) → confirm (preview) → success/error
+    - Add EN/DE translations for the dialog and update the onboarding tip to mention the option
+    - _Requirements: 16.1, 16.2_
+
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for faster MVP
 - Each task references specific requirements for traceability
 - Checkpoints ensure incremental validation
-- Property tests validate universal correctness properties from the design document (26 properties total)
+- Property tests validate universal correctness properties from the design document (27 properties total)
 - Unit tests validate specific examples and edge cases
 - All code is TypeScript targeting React 18+ with Vite build tooling
 - The SubnetCalculator and TreeOperations modules are pure functions with no UI dependency, enabling thorough property-based testing
@@ -352,7 +375,9 @@ This plan implements a client-side, offline-capable IPAM web application using R
     { "id": 14, "tasks": ["15.1"] },
     { "id": 15, "tasks": ["15.2", "15.3"] },
     { "id": 16, "tasks": ["16.1", "16.2", "16.3"] },
-    { "id": 17, "tasks": ["17.1", "17.2"] }
+    { "id": 17, "tasks": ["17.1", "17.2"] },
+    { "id": 18, "tasks": ["19.1", "19.3"] },
+    { "id": 19, "tasks": ["19.2", "19.4"] }
   ]
 }
 ```

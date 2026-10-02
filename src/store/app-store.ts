@@ -7,6 +7,7 @@ import type {
   VPCSummary,
   BrandingConfiguration,
   SubnetNode,
+  CIDRBlock,
   ValidationResult,
   SerializationError,
   TagError,
@@ -26,6 +27,19 @@ import {
   generateId,
 } from '../core/tree-operations';
 import { validateCIDR } from '../core/input-validator';
+import { validateMapExisting } from '../core/map-existing-calculator';
+import type { MapExistingError } from '../core/map-existing-calculator';
+
+/**
+ * Successful result of the mapExistingCIDR store action.
+ */
+export interface MapExistingSuccess {
+  readonly ok: true;
+  /** The mapped CIDR block (adjusted to its network address). */
+  readonly cidr: CIDRBlock;
+  /** The workload name assigned to the mapped subnet. */
+  readonly name: string;
+}
 import { computeSummary } from '../core/summary-calculator';
 import { getProfile } from '../config/cloud-profiles';
 import { reconcileTags } from '../config/cloud-change';
@@ -68,6 +82,7 @@ export interface AppState {
   setWorkloadAccount: (nodeId: string, account: string | null) => void;
   setAvailabilityZone: (nodeId: string, az: string | null) => void;
   setLabel: (nodeId: string, label: string | null) => void;
+  mapExistingCIDR: (input: string, name: string) => MapExistingSuccess | MapExistingError;
   exportJSON: () => string | null;
   importJSON: (json: string) => SerializationError | null;
   syncToURL: () => void;
@@ -292,6 +307,67 @@ export const useAppStore = create<AppState>((set, get) => ({
     const newTree = treeSetLabel(state.networkPlan.tree, nodeId, label);
     const { networkPlan, summary } = updateTree(state, newTree);
     set({ networkPlan, summary });
+  },
+
+  mapExistingCIDR: (input: string, name: string) => {
+    const state = get();
+
+    if (!state.targetCloud || !state.networkPlan) {
+      return {
+        type: 'not_contained' as const,
+        message: 'Select a cloud and define a root CIDR block before mapping existing subnets.',
+      };
+    }
+
+    // Validate and parse the CIDR syntax.
+    const parsed = validateCIDR(input);
+    if (!parsed.valid) {
+      return { type: 'not_contained' as const, message: parsed.error.message };
+    }
+
+    // Adjust host bits to the network address so the mapping is canonical.
+    const target = adjustToNetworkAddress(
+      parsed.cidr.networkAddress.bits,
+      parsed.cidr.prefixLength
+    );
+
+    // Validate containment / overlap and compute the navigation path.
+    const result = validateMapExisting(
+      state.networkPlan.tree,
+      state.networkPlan.rootCIDR,
+      target
+    );
+    if ('type' in result) {
+      return result;
+    }
+
+    // Walk the path from the root to the target CIDR, splitting as needed and
+    // following the correct (left/right) child at each level. We re-read the
+    // store after each split so we operate on the freshest tree.
+    let currentNodeId = state.networkPlan.tree.id;
+    for (const choice of result.path) {
+      const currentPlan = get().networkPlan;
+      if (!currentPlan) break;
+      let node = findNode(currentPlan.tree, currentNodeId);
+      if (!node) break;
+
+      // Split the node if it is still a leaf; existing children are reused.
+      if (node.children === null) {
+        get().splitSubnet(currentNodeId);
+        const updatedPlan = get().networkPlan;
+        if (!updatedPlan) break;
+        node = findNode(updatedPlan.tree, currentNodeId);
+        if (!node || node.children === null) break;
+      }
+
+      currentNodeId = node.children[choice].id;
+    }
+
+    // Assign the workload name as both label and workload account on the target.
+    get().setLabel(currentNodeId, name);
+    get().setWorkloadAccount(currentNodeId, name);
+
+    return { ok: true as const, cidr: target, name };
   },
 
   exportJSON: () => {

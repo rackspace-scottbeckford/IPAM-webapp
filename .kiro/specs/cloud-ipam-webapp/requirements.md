@@ -25,6 +25,7 @@ A web application for IP Address Management (IPAM) designed for customers planni
 - **CIDR_Suffix_Selector**: A dropdown control for selecting the prefix length (/8 to /28) that synchronizes bidirectionally with the CIDR text input
 - **Reverse_CIDR_Calculator**: A function that determines the smallest prefix length (largest subnet) required to accommodate a given number of usable IP addresses after provider-reserved addresses are subtracted
 - **Language_Toggle**: A UI control that switches the application interface between English (EN) and German (DE), with the title always remaining in English
+- **Map_Existing_Operation**: Importing an already-allocated CIDR_Block into the current Network_Plan tree by placing it at the position dictated by its network address, rather than auto-allocating the next free block
 
 ## Requirements
 
@@ -234,6 +235,22 @@ A web application for IP Address Management (IPAM) designed for customers planni
 5. THE IPAM_App SHALL default to English (EN) on initial load
 6. THE IPAM_App SHALL visually indicate the currently active language in the toggle control using a distinct active state (e.g., highlighted background)
 7. THE language toggle SHALL be keyboard accessible and include appropriate ARIA attributes (aria-pressed or aria-selected) indicating the active language
+
+### Requirement 16: Map Existing Subnet Allocation
+
+**User Story:** As a User who has already allocated some CIDR blocks outside this tool, I want to map those existing subnets into my Network_Plan, so that I can track my current allocations in the tool without re-deriving them from scratch.
+
+#### Acceptance Criteria
+
+1. THE IPAM_App SHALL provide a "Map Existing" button, positioned adjacent to the "Create Workload" button, that initiates a Map_Existing_Operation
+2. WHEN the User clicks the "Map Existing" button, THE IPAM_App SHALL display a dialog prompting the User to enter: a workload name (1 to 64 characters) and an existing CIDR_Block in CIDR notation
+3. WHEN the User submits the CIDR_Block, THE IPAM_App SHALL validate it using the same rules as Requirement 2 (format, octet range, prefix /8 to /30) and SHALL automatically adjust host bits to the network address
+4. IF the submitted CIDR_Block has a prefix length shorter than the root CIDR_Block (i.e., it is larger than the whole plan), THEN THE IPAM_App SHALL display an error and SHALL NOT perform the Map_Existing_Operation
+5. IF the submitted CIDR_Block does not fall entirely within the root CIDR_Block's address range, THEN THE IPAM_App SHALL display an error indicating the subnet is outside the root network and SHALL NOT perform the Map_Existing_Operation
+6. IF the submitted CIDR_Block overlaps any already-allocated leaf subnet (one carrying a Use_Case_Tag, Workload_Account, or text label), THEN THE IPAM_App SHALL display an error indicating the conflict and SHALL NOT perform the Map_Existing_Operation
+7. WHEN the submitted CIDR_Block exactly matches an existing allocated subnet, THE IPAM_App SHALL report that the subnet is already mapped and SHALL NOT create a duplicate
+8. WHEN validation succeeds and the User confirms, THE IPAM_App SHALL perform the Split_Operations required to materialize the target CIDR_Block at its correct position in the tree (navigating to the specific child at each level according to the target network address), assign the workload name as the subnet text label, and assign the workload name as the Workload_Account identifier
+9. THE Map_Existing_Operation SHALL preserve all existing allocations in the tree unchanged
 
 ---
 
