@@ -130,8 +130,9 @@ describe('PlanSerializer', () => {
       const parsed = JSON.parse(json);
 
       const leftChild = parsed.tree.children[0];
-      expect(leftChild.tags).toHaveLength(1);
-      expect(leftChild.tags[0].name).toBe('workload');
+      // Tags are serialized under the `iacTags` key in JSON output.
+      expect(leftChild.iacTags).toHaveLength(1);
+      expect(leftChild.iacTags[0].name).toBe('workload');
       expect(leftChild.workloadAccount).toBe('account-1');
       expect(leftChild.availabilityZone).toBe('us-east-1a');
       expect(leftChild.label).toBe('Production VPC');
