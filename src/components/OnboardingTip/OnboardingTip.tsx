@@ -27,13 +27,14 @@ export function OnboardingTip() {
               : 'Split the network into smaller subnets, create a workload with a specific IP capacity, or map an existing subnet you have already allocated.'}
           </p>
         </div>
-        <div className={styles.actions}>
-          <span className={styles.highlight}>{t.split} ↓</span>
-          <span className={styles.separator}>{language === 'de' ? 'oder' : 'or'}</span>
-          <span className={styles.highlight}>{t.createWorkload} →</span>
-          <span className={styles.separator}>{language === 'de' ? 'oder' : 'or'}</span>
-          <span className={styles.highlight}>{t.mapExisting} →</span>
-        </div>
+        <p className={styles.actions} aria-hidden="true">
+          {language === 'de' ? 'Suchen Sie in der Symbolleiste nach:' : 'Look for these in the toolbar:'}
+          <span className={styles.actionName}>{t.split}</span>
+          <span className={styles.separator}>·</span>
+          <span className={styles.actionName}>{t.createWorkload}</span>
+          <span className={styles.separator}>·</span>
+          <span className={styles.actionName}>{t.mapExisting}</span>
+        </p>
       </div>
       <button
         type="button"
