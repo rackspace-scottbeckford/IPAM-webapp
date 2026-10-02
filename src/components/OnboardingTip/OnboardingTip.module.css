@@ -53,30 +53,6 @@
   line-height: 1.4;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  flex-shrink: 0;
-  margin: 0;
-  font-size: 0.75rem;
-  color: #047857;
-  /* Guidance text, not interactive — make that unmistakable. */
-  cursor: default;
-  user-select: none;
-}
-
-.actionName {
-  font-weight: 600;
-  color: #065f46;
-  white-space: nowrap;
-}
-
-.separator {
-  color: #6ee7b7;
-}
-
 .dismiss {
   flex-shrink: 0;
   width: 24px;
