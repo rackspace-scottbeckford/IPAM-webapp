@@ -38,6 +38,7 @@
 .sidebar {
   position: sticky;
   top: 1.5rem;
+  min-width: 0;
 }
 
 @media (max-width: 900px) {

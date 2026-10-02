@@ -53,31 +53,6 @@
   line-height: 1.4;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.highlight {
-  display: inline-block;
-  padding: 0.25rem 0.625rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #065f46;
-  background-color: #d1fae5;
-  border: 1px solid #6ee7b7;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.separator {
-  font-size: 0.75rem;
-  color: #6b7280;
-  font-style: italic;
-}
-
 .dismiss {
   flex-shrink: 0;
   width: 24px;

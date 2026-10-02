@@ -128,26 +128,28 @@ export function SummaryPanel() {
       {summary.accountBreakdown.length > 0 && (
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>{t.perAccount}</h3>
-          <table className={styles.accountTable} aria-label={t.perAccount}>
-            <thead>
-              <tr>
-                <th scope="col">{t.workloadAccount}</th>
-                <th scope="col">{t.totalSubnets}</th>
-                <th scope="col">{t.usableHosts}</th>
-                <th scope="col">%</th>
-              </tr>
-            </thead>
-            <tbody>
-              {summary.accountBreakdown.map((acct) => (
-                <tr key={acct.account}>
-                  <td>{acct.account}</td>
-                  <td>{acct.subnetCount}</td>
-                  <td>{acct.usableIPs.toLocaleString()}</td>
-                  <td>{acct.percentageOfTotal.toFixed(1)}%</td>
+          <div className={styles.tableScroll}>
+            <table className={styles.accountTable} aria-label={t.perAccount}>
+              <thead>
+                <tr>
+                  <th scope="col">{t.workloadAccount}</th>
+                  <th scope="col" className={styles.numCol}>{t.totalSubnets}</th>
+                  <th scope="col" className={styles.numCol}>{t.usableHosts}</th>
+                  <th scope="col" className={styles.numCol}>%</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {summary.accountBreakdown.map((acct) => (
+                  <tr key={acct.account}>
+                    <td className={styles.accountCell}>{acct.account}</td>
+                    <td className={styles.numCol}>{acct.subnetCount}</td>
+                    <td className={styles.numCol}>{acct.usableIPs.toLocaleString()}</td>
+                    <td className={styles.numCol}>{acct.percentageOfTotal.toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
