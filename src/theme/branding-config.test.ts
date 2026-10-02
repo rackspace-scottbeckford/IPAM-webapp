@@ -21,7 +21,7 @@ describe('branding-config', () => {
       expect(RACKSPACE_DEFAULTS.logoUrl).toBeNull();
       expect(RACKSPACE_DEFAULTS.primaryColor).toBe('#EB0000');
       expect(RACKSPACE_DEFAULTS.secondaryColor).toBe('#1A1A1A');
-      expect(RACKSPACE_DEFAULTS.title).toBe('Cloud IPAM Planner');
+      expect(RACKSPACE_DEFAULTS.title).toBe('Cloud IP Address Management Tool');
       expect(RACKSPACE_DEFAULTS.faviconUrl).toBeNull();
     });
   });

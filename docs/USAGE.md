@@ -28,6 +28,28 @@ Click **+ Add comment** on any subnet to type a free-text label (max 64 characte
 
 Click an existing comment to edit it. Press Enter to save or Escape to cancel.
 
+## Creating a Workload
+
+Click **+ Create Workload** in the toolbar when you know how much capacity you need but not the exact CIDR. Enter a workload name and the number of usable IP addresses required. The tool calculates the smallest subnet that fits (after provider-reserved addresses), finds free space in the tree, and allocates it — labelling the subnet with your workload name.
+
+Use this when you are designing new capacity from scratch.
+
+## Mapping Existing Subnets
+
+Click **Map Existing** in the toolbar when you have *already* allocated address space elsewhere and want to track it here. This is the counterpart to Create Workload: instead of picking a free block for you, it places the exact CIDR you provide.
+
+1. Click **Map Existing**.
+2. Enter a workload name and the existing CIDR block (e.g., `10.23.5.0/24`).
+3. Review the preview, then confirm.
+
+The subnet is inserted at the correct position in the tree and labelled with your workload name. The tool validates your input and will refuse to map a CIDR that:
+
+- is larger than (has a shorter prefix than) the root network,
+- falls outside the root network's address range, or
+- overlaps a subnet you have already allocated (tagged, labelled, or assigned to a workload account).
+
+This lets you bring an existing allocation under tracking without re-deriving it split-by-split.
+
 ## Switching Cloud Provider
 
 Click the cloud provider badge in the header to switch. You'll be asked whether to:

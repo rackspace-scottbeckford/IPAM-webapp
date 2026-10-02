@@ -10,6 +10,7 @@ import { GroupedView } from './components/GroupedView/GroupedView';
 import { SummaryPanel } from './components/SummaryPanel/SummaryPanel';
 import { FileControls } from './components/FileControls/FileControls';
 import { CreateWorkload } from './components/CreateWorkload/CreateWorkload';
+import { MapExisting } from './components/MapExisting/MapExisting';
 import { OnboardingTip } from './components/OnboardingTip/OnboardingTip';
 import { ToastContainer } from './components/Toast/Toast';
 import { AnnouncerProvider } from './components/Announcer/Announcer';
@@ -38,6 +39,7 @@ function App() {
                 <div className={styles.toolbar}>
                   <CIDRInput />
                   <CreateWorkload />
+                  <MapExisting />
                   <FileControls />
                 </div>
                 {networkPlan && <OnboardingTip />}

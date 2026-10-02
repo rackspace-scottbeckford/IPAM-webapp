@@ -21,6 +21,8 @@
 │ CSS Modules  │              │ tree-ops     │ URL encode │
 │ Hooks        │              │ validators   │ File I/O   │
 │              │              │ summary-calc │            │
+│              │              │ reverse-cidr │            │
+│              │              │ map-existing │            │
 ├──────────────┴──────────────┴──────────────┴────────────┤
 │              Static Assets & Configuration               │
 │         Cloud Profiles │ Branding Config │ Icons         │
@@ -34,6 +36,13 @@
 3. User splits/joins → immutable tree update → recompute summary → re-render
 4. State changes → sync to URL hash automatically
 5. Export → serialize full plan to JSON blob → trigger download
+
+## Subnet Allocation Helpers
+
+Two pure-function modules build on the tree model to help users populate it:
+
+- **`reverse-cidr-calculator.ts`** — backs the **Create Workload** flow. Given a requested usable-IP count, it finds the smallest prefix that fits (after provider reservations) and locates free space in the tree to auto-allocate.
+- **`map-existing-calculator.ts`** — backs the **Map Existing** flow. Given a specific CIDR the user has already allocated, `validateMapExisting` checks it is contained within the root and does not overlap any assigned leaf, then `computeSplitPath` derives the left/right child choices (from the target's network bits) needed to materialize it at the correct position. The `mapExistingCIDR` store action walks that path, splitting as needed, and labels the resulting node.
 
 ## Subnet Tree Model
 

@@ -73,6 +73,16 @@ export interface Translations {
   allocatedSubnetFor: string;
   selectCloudFirst: string;
 
+  // Map Existing
+  mapExisting: string;
+  mapExistingTitle: string;
+  mapExistingDescription: string;
+  existingCIDR: string;
+  mapSubnet: string;
+  cannotMapExisting: string;
+  subnetMapped: string;
+  mappedSubnetFor: string;
+
   // Summary panel
   summaryTitle: string;
   totalSubnets: string;
@@ -176,6 +186,15 @@ export const en: Translations = {
   allocatedSubnetFor: 'Allocated a /{prefix} subnet for "{name}".',
   selectCloudFirst: 'Select a cloud and enter a CIDR block first',
 
+  mapExisting: 'Map Existing',
+  mapExistingTitle: 'Map Existing Subnet',
+  mapExistingDescription: 'Already allocated some address space? Enter an existing CIDR block and a name to track it in this plan. The subnet must fall within the root network and must not overlap an existing allocation.',
+  existingCIDR: 'Existing CIDR Block',
+  mapSubnet: 'Map Subnet',
+  cannotMapExisting: 'Cannot Map Subnet',
+  subnetMapped: 'Subnet Mapped',
+  mappedSubnetFor: 'Mapped {cidr} to "{name}".',
+
   summaryTitle: 'VPC Planning Summary',
   totalSubnets: 'Total Subnets',
   subnetsByTag: 'Subnets by Tag',
@@ -272,6 +291,15 @@ export const de: Translations = {
   workloadCreated: 'Workload erstellt',
   allocatedSubnetFor: 'Ein /{prefix} Subnetz für „{name}" zugewiesen.',
   selectCloudFirst: 'Wählen Sie zuerst eine Cloud und geben Sie einen CIDR-Block ein',
+
+  mapExisting: 'Bestehendes zuordnen',
+  mapExistingTitle: 'Bestehendes Subnetz zuordnen',
+  mapExistingDescription: 'Bereits Adressraum zugewiesen? Geben Sie einen bestehenden CIDR-Block und einen Namen ein, um ihn in diesem Plan zu verfolgen. Das Subnetz muss innerhalb des Root-Netzwerks liegen und darf sich nicht mit einer bestehenden Zuweisung überschneiden.',
+  existingCIDR: 'Bestehender CIDR-Block',
+  mapSubnet: 'Subnetz zuordnen',
+  cannotMapExisting: 'Subnetz kann nicht zugeordnet werden',
+  subnetMapped: 'Subnetz zugeordnet',
+  mappedSubnetFor: '{cidr} zu „{name}" zugeordnet.',
 
   summaryTitle: 'VPC-Planungsübersicht',
   totalSubnets: 'Subnetze gesamt',
